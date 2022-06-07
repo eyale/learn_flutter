@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 
 import '../models/transaction.dart';
+import '../widgets/transactions_form.dart';
+import '../widgets/transactions_list.dart';
 
-class MyHomePage extends StatelessWidget {
-  final List<Transaction> transactions = [
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  final List<Transaction> _transactions = [
     Transaction(
-      id: "1fkldf3371",
-      title: "New Balance shop",
+      id: '1fkldf3371',
+      title: 'New Balance shop',
       amount: 33.02,
       date: DateTime.now(),
     ),
@@ -18,35 +25,71 @@ class MyHomePage extends StatelessWidget {
     ),
   ];
 
+  void _addNewTransaction(String title, double amount) {
+    final Transaction newTransaction = Transaction(
+      id: DateTime.now().toString(),
+      title: title,
+      amount: amount,
+      date: DateTime.now(),
+    );
+
+    setState(() {
+      _transactions.add(newTransaction);
+    });
+  }
+
+  void _showBottomShit(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return TransactionsForm(onAddPress: _addNewTransaction);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: IconButton(
+          onPressed: () => _showBottomShit(context),
+          icon: const Icon(Icons.add),
+        ),
+        onPressed: () {},
+      ),
       appBar: AppBar(
         title: const Text('Expanse Planner'),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: <Widget>[
-          Card(
-            color: Colors.blue,
-            child: Text(
-              'Chart',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ),
-          Card(
-            elevation: 5,
-            color: Colors.redAccent,
-            child: SizedBox(
-              width: double.infinity,
-              child: Text(
-                'List of transactions',
-                style: Theme.of(context).textTheme.headline4,
-              ),
-            ),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () => _showBottomShit(context),
+            icon: const Icon(Icons.add),
           ),
         ],
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Container(
+                  width: double.infinity,
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
+                  child: Card(
+                    color: Colors.lightBlue,
+                    child: Text(
+                      'Chart',
+                      style: Theme.of(context).textTheme.headline4,
+                    ),
+                  ),
+                ),
+                TransactionsList(transactions: _transactions),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
