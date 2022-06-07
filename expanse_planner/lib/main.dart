@@ -17,6 +17,21 @@ class MyApp extends StatelessWidget {
       title: 'Expanse planner',
       theme: ThemeData(
         primarySwatch: Colors.lime,
+        textTheme: const TextTheme(
+          subtitle1: TextStyle(color: Colors.cyan),
+          headline1: TextStyle(color: Colors.deepOrange),
+          headline2: TextStyle(color: Colors.deepPurple),
+          subtitle2: TextStyle(color: Colors.greenAccent),
+          bodyText2: TextStyle(color: Colors.teal),
+          bodyText1: TextStyle(color: Colors.indigo),
+        ),
+        appBarTheme: const AppBarTheme(foregroundColor: Colors.brown),
+        iconTheme: const IconThemeData(color: Colors.amber),
+        primaryIconTheme: const IconThemeData(color: Colors.lightGreen),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Colors.red,
+          foregroundColor: Colors.white,
+        ),
       ),
       home: GestureDetector(
         onTap: () {

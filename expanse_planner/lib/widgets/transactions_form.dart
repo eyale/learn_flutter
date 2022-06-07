@@ -56,9 +56,9 @@ class _TransactionsFormState extends State<TransactionsForm> {
               child: OutlinedButton(
                 onPressed: onSubmit,
                 style: OutlinedButton.styleFrom(
-                  primary: Colors.lightBlue,
-                  side: const BorderSide(
-                    color: Colors.lightBlue,
+                  primary: Theme.of(context).primaryColor,
+                  side: BorderSide(
+                    color: Theme.of(context).primaryColor,
                     width: 0.2,
                   ),
                 ),

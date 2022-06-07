@@ -20,10 +20,10 @@ class TransactionsList extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     padding: const EdgeInsets.all(20),
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       border: Border(
                         right: BorderSide(
-                          color: Colors.lightBlue,
+                          color: Theme.of(context).primaryColor,
                           width: 2,
                         ),
                       ),
@@ -33,7 +33,6 @@ class TransactionsList extends StatelessWidget {
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Colors.blueGrey,
                       ),
                     ),
                   ),
@@ -49,7 +48,6 @@ class TransactionsList extends StatelessWidget {
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Colors.blueGrey,
                             ),
                           ),
                         ),
@@ -59,7 +57,6 @@ class TransactionsList extends StatelessWidget {
                               .format(transactions[index].date),
                           style: const TextStyle(
                             fontSize: 16,
-                            color: Colors.blueGrey,
                           ),
                         ),
                       ],

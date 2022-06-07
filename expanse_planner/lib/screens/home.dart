@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   margin:
                       const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
                   child: Card(
-                    color: Colors.lightBlue,
+                    color: Theme.of(context).primaryColor,
                     child: Text(
                       'Chart',
                       style: Theme.of(context).textTheme.headline4,
