@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/transaction.dart';
 import '../widgets/transactions_form.dart';
 import '../widgets/transactions_list.dart';
+import '../widgets/chart.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -64,12 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: double.infinity,
                   margin:
                       const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
-                  child: Card(
-                    child: Text(
-                      'Chart',
-                      style: Theme.of(context).textTheme.headline1,
-                    ),
-                  ),
+                  child: const Chart(),
                 ),
                 TransactionsList(transactions: _transactions),
               ],

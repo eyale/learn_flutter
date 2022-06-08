@@ -5,6 +5,11 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text('CHART');
+    return Card(
+      child: Text(
+        'Chart',
+        style: Theme.of(context).textTheme.headline1,
+      ),
+    );
   }
 }
