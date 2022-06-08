@@ -10,20 +10,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transactions = [
-    Transaction(
-      id: '1fkldf3371',
-      title: 'New Balance shop',
-      amount: 33.02,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: '312opie233',
-      title: 'Silpo shop',
-      amount: 70.0,
-      date: DateTime.now(),
-    ),
-  ];
+  final List<Transaction> _transactions = [];
 
   void _addNewTransaction(String title, double amount) {
     final Transaction newTransaction = Transaction(
@@ -71,17 +58,16 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
                   width: double.infinity,
                   margin:
                       const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
                   child: Card(
-                    color: Theme.of(context).primaryColor,
                     child: Text(
                       'Chart',
-                      style: Theme.of(context).textTheme.headline4,
+                      style: Theme.of(context).textTheme.headline1,
                     ),
                   ),
                 ),

@@ -17,15 +17,37 @@ class MyApp extends StatelessWidget {
       title: 'Expanse planner',
       theme: ThemeData(
         primarySwatch: Colors.lime,
-        textTheme: const TextTheme(
-          subtitle1: TextStyle(color: Colors.cyan),
-          headline1: TextStyle(color: Colors.deepOrange),
-          headline2: TextStyle(color: Colors.deepPurple),
-          subtitle2: TextStyle(color: Colors.greenAccent),
-          bodyText2: TextStyle(color: Colors.teal),
-          bodyText1: TextStyle(color: Colors.indigo),
-        ),
-        appBarTheme: const AppBarTheme(foregroundColor: Colors.brown),
+        fontFamily: 'DMSans',
+        textTheme: ThemeData.light().textTheme.copyWith(
+              // Variant 1 - uncomment and comment Variant 2
+              // bodyMedium: const TextStyle(color: Colors.cyan),
+              // bodyLarge: const TextStyle(color: Colors.red),
+              // bodySmall: const TextStyle(color: Colors.deepPurple),
+
+              // Variant 2 - uncomment and comment Variant 1
+              subtitle1: const TextStyle(color: Colors.cyan),
+              headline1: const TextStyle(color: Colors.deepOrange),
+              // headline3: ,
+              // headline4: ,
+              // headline5: ,
+              // headline6: ,
+              // headlineLarge: ,
+              // headlineMedium: ,
+              // headlineSmall: ,
+              subtitle2: const TextStyle(color: Colors.greenAccent),
+              bodyText2: const TextStyle(color: Colors.teal),
+              bodyText1: const TextStyle(color: Colors.indigo),
+            ),
+        appBarTheme: const AppBarTheme(
+            foregroundColor: Colors.redAccent,
+            backgroundColor: Colors.grey,
+            titleTextStyle: TextStyle(
+              fontFamily: 'DMSans',
+              // fontStyle: FontStyle.italic,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Colors.brown,
+            )),
         iconTheme: const IconThemeData(color: Colors.amber),
         primaryIconTheme: const IconThemeData(color: Colors.lightGreen),
         floatingActionButtonTheme: const FloatingActionButtonThemeData(

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../models/transaction.dart';
+import './no_transactions.dart';
+import './transactions_item.dart';
 
 class TransactionsList extends StatelessWidget {
   final List<Transaction> transactions;
@@ -12,61 +13,17 @@ class TransactionsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height / 2,
-      child: ListView.builder(
-        itemBuilder: (context, index) {
-          return Card(
-              elevation: 5,
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        right: BorderSide(
-                          color: Theme.of(context).primaryColor,
-                          width: 2,
-                        ),
-                      ),
-                    ),
-                    child: Text(
-                      '\$${transactions[index].amount.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                          child: Text(
-                            transactions[index].title,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          DateFormat.yMMMMd("en_US")
-                              .add_Hm()
-                              .format(transactions[index].date),
-                          style: const TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ));
-        },
-        itemCount: transactions.length,
-      ),
+      child: transactions.isEmpty
+          ? const NoTransactions()
+          : ListView.builder(
+              itemBuilder: (context, index) {
+                return TransactionsItem(
+                  transactions: transactions,
+                  itemIndex: index,
+                );
+              },
+              itemCount: transactions.length,
+            ),
     );
   }
 }
