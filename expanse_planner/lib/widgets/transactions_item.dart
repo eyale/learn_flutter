@@ -4,66 +4,47 @@ import 'package:intl/intl.dart';
 import '../models/transaction.dart';
 
 class TransactionsItem extends StatelessWidget {
-  const TransactionsItem({
-    Key? key,
-    required this.transactions,
-    required this.itemIndex,
-  }) : super(key: key);
+  TransactionsItem(
+      {Key? key,
+      required this.transactions,
+      required this.itemIndex,
+      required this.removeTransaction})
+      : super(key: key);
 
   final List<Transaction> transactions;
   final int itemIndex;
+  Function removeTransaction;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
-      child: Row(
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              border: Border(
-                right: BorderSide(
-                  color: Theme.of(context).primaryColor,
-                  width: 2,
-                ),
-              ),
-            ),
-            child: Text(
-              '\$${transactions[itemIndex].amount.toStringAsFixed(2)}',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+      child: ListTile(
+        leading: CircleAvatar(
+          radius: 30,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FittedBox(
+              child: Text(
+                  '\$${transactions[itemIndex].amount.toStringAsFixed(2)}'),
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                  child: Text(
-                    transactions[itemIndex].title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Text(
-                  DateFormat.yMMMMd("en_US")
-                      .add_Hm()
-                      .format(transactions[itemIndex].date),
-                  style: const TextStyle(
-                    fontSize: 16,
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
+        ),
+        title: Text(transactions[itemIndex].title),
+        subtitle: Text(
+          DateFormat.yMMMMd('en_US')
+              .add_Hm()
+              .format(transactions[itemIndex].date),
+          style: const TextStyle(fontSize: 13),
+        ),
+        trailing: IconButton(
+          icon: const Icon(Icons.delete),
+          color: Theme.of(context).errorColor,
+          onPressed: () {
+            removeTransaction(transactions[itemIndex].id);
+            // print('transactions[itemIndex].id: ${transactions[itemIndex].id}');
+          },
+        ),
       ),
     );
   }

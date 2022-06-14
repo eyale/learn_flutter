@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TransactionsForm extends StatefulWidget {
   final Function onAddPress;
@@ -10,24 +11,39 @@ class TransactionsForm extends StatefulWidget {
 }
 
 class _TransactionsFormState extends State<TransactionsForm> {
-  final titleController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
+  DateTime _selectedDate = DateTime.now();
 
-  final amountController = TextEditingController();
+  void _onSubmit() {
+    final title = _titleController.text;
+    final amount = double.tryParse(_amountController.text) as double;
 
-  void onSubmit() {
-    final title = titleController.text;
-    final amount = double.tryParse(amountController.text) as double;
+    final condition = title.isEmpty || amount.isNaN || amount <= 0;
 
-    if (title.isEmpty || amount.isNaN || amount <= 0) {
+    if (condition) {
       return;
     }
 
-    widget.onAddPress(
-      title,
-      amount,
-    );
+    widget.onAddPress(title, amount, _selectedDate);
 
     Navigator.of(context).pop();
+  }
+
+  void _showDatePicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2022),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        _selectedDate = pickedDate;
+      });
+    });
   }
 
   @override
@@ -40,31 +56,53 @@ class _TransactionsFormState extends State<TransactionsForm> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             TextField(
-              controller: titleController,
-              onSubmitted: (_) => onSubmit(),
+              controller: _titleController,
+              onSubmitted: (_) => _onSubmit(),
               decoration: const InputDecoration(labelText: 'Title'),
             ),
             TextField(
-              controller: amountController,
+              controller: _amountController,
               decoration: const InputDecoration(labelText: 'Amount'),
-              onSubmitted: (_) => onSubmit(),
+              onSubmitted: (_) => _onSubmit(),
               keyboardType:
                   const TextInputType.numberWithOptions(decimal: true),
             ),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    _selectedDate == null
+                        ? 'Choose transactions date please!'
+                        : 'Picked date: ${DateFormat.yMMMMd('en_US').format(_selectedDate)}',
+                  ),
+                  OutlinedButton(
+                    onPressed: _showDatePicker,
+                    style: OutlinedButton.styleFrom(
+                      primary: Theme.of(context).errorColor,
+                      side: BorderSide(
+                        color: Theme.of(context).errorColor,
+                        width: 0.2,
+                      ),
+                    ),
+                    child: const Text('Choose date'),
+                  ),
+                ],
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-              child: OutlinedButton(
-                onPressed: onSubmit,
-                style: OutlinedButton.styleFrom(
-                  primary: Theme.of(context).primaryColor,
-                  side: BorderSide(
-                    color: Theme.of(context).primaryColor,
-                    width: 0.2,
-                  ),
-                ),
+              child: ElevatedButton(
+                onPressed: _onSubmit,
+                style: ButtonStyle(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18),
+                            side: const BorderSide(color: Colors.yellow)))),
                 child: const Text('Add new Transaction'),
               ),
-            )
+            ),
           ],
         ),
       ),

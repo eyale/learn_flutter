@@ -17,7 +17,7 @@ class NoTransactions extends StatelessWidget {
           height: 30,
         ),
         SizedBox(
-          height: 250,
+          height: MediaQuery.of(context).size.height * 0.3,
           child: Image.asset(
             'assets/images/no-sign-sign-of.png',
             fit: BoxFit.cover,

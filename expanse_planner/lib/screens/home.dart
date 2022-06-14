@@ -13,16 +13,22 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactions = [];
 
-  void _addNewTransaction(String title, double amount) {
+  void _addNewTransaction(String title, double amount, DateTime selectedDate) {
     final Transaction newTransaction = Transaction(
       id: DateTime.now().toString(),
       title: title,
       amount: amount,
-      date: DateTime.now(),
+      date: selectedDate,
     );
 
     setState(() {
       _transactions.add(newTransaction);
+    });
+  }
+
+  void _removeTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((element) => element.id == id);
     });
   }
 
@@ -35,25 +41,34 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
+  List<Transaction> get _recentTransactions {
+    return _transactions.where((element) {
+      return element.date
+          .isAfter(DateTime.now().subtract(const Duration(days: 7)));
+    }).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      title: const Text('Expanse Planner'),
+      actions: <Widget>[
+        IconButton(
+          onPressed: () => _showBottomShit(context),
+          icon: const Icon(Icons.add),
+        ),
+      ],
+    );
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: IconButton(
           onPressed: () => _showBottomShit(context),
           icon: const Icon(Icons.add),
         ),
-        onPressed: () {},
+        onPressed: () => _showBottomShit(context),
       ),
-      appBar: AppBar(
-        title: const Text('Expanse Planner'),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () => _showBottomShit(context),
-            icon: const Icon(Icons.add),
-          ),
-        ],
-      ),
+      appBar: appBar,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Container(
@@ -61,13 +76,23 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Container(
+                SizedBox(
                   width: double.infinity,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 0, vertical: 20),
-                  child: const Chart(),
+                  height: (MediaQuery.of(context).size.height -
+                          appBar.preferredSize.height -
+                          MediaQuery.of(context).padding.top) *
+                      0.3,
+                  child: Chart(recentTransactions: _recentTransactions),
                 ),
-                TransactionsList(transactions: _transactions),
+                SizedBox(
+                  height: (MediaQuery.of(context).size.height -
+                          appBar.preferredSize.height -
+                          MediaQuery.of(context).padding.top) *
+                      0.7,
+                  child: TransactionsList(
+                      transactions: _transactions,
+                      removeTransaction: _removeTransaction),
+                ),
               ],
             ),
           ),

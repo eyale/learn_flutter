@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'screens/home.dart';
 
 void main() {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  // ]);
   runApp(const MyApp());
 }
 
@@ -40,16 +45,17 @@ class MyApp extends StatelessWidget {
             ),
         appBarTheme: const AppBarTheme(
             foregroundColor: Colors.redAccent,
-            backgroundColor: Colors.grey,
+            backgroundColor: Colors.black,
             titleTextStyle: TextStyle(
               fontFamily: 'DMSans',
               // fontStyle: FontStyle.italic,
               fontWeight: FontWeight.bold,
               fontSize: 20,
-              color: Colors.brown,
+              color: Colors.orange,
             )),
         iconTheme: const IconThemeData(color: Colors.amber),
         primaryIconTheme: const IconThemeData(color: Colors.lightGreen),
+        errorColor: Colors.pinkAccent,
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: Colors.red,
           foregroundColor: Colors.white,

@@ -6,24 +6,30 @@ import './transactions_item.dart';
 
 class TransactionsList extends StatelessWidget {
   final List<Transaction> transactions;
+  Function removeTransaction;
 
-  const TransactionsList({required this.transactions});
+  TransactionsList({
+    required this.transactions,
+    required this.removeTransaction,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height / 2,
-      child: transactions.isEmpty
-          ? const NoTransactions()
-          : ListView.builder(
-              itemBuilder: (context, index) {
-                return TransactionsItem(
-                  transactions: transactions,
-                  itemIndex: index,
-                );
-              },
-              itemCount: transactions.length,
-            ),
+    return Container(
+      color: Colors.amber.shade100,
+      child: SizedBox(
+        child: transactions.isEmpty
+            ? const NoTransactions()
+            : ListView.builder(
+                itemBuilder: (context, index) {
+                  return TransactionsItem(
+                      transactions: transactions,
+                      itemIndex: index,
+                      removeTransaction: removeTransaction);
+                },
+                itemCount: transactions.length,
+              ),
+      ),
     );
   }
 }
