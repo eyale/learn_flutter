@@ -6,15 +6,16 @@ import './transactions_item.dart';
 
 class TransactionsList extends StatelessWidget {
   final List<Transaction> transactions;
-  Function removeTransaction;
+  final Function removeTransaction;
 
-  TransactionsList({
+  const TransactionsList({
     required this.transactions,
     required this.removeTransaction,
   });
 
   @override
   Widget build(BuildContext context) {
+    print('💲💲💲 build TransactionList');
     return Container(
       color: Colors.amber.shade100,
       child: SizedBox(

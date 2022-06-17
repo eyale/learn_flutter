@@ -5,10 +5,9 @@ import '../models/transaction.dart';
 import './chart_bar.dart';
 
 class Chart extends StatelessWidget {
-  const Chart({
-    required this.recentTransactions,
-    Key? key,
-  }) : super(key: key);
+  Chart({required this.recentTransactions}) {
+    print('constructor chart'.toUpperCase());
+  }
 
   final List<Transaction> recentTransactions;
 
@@ -39,6 +38,7 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('💹 build Chart');
     return Card(
       elevation: 5,
       margin: const EdgeInsets.symmetric(vertical: 20),

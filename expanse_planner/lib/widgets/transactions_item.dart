@@ -4,16 +4,21 @@ import 'package:intl/intl.dart';
 import '../models/transaction.dart';
 
 class TransactionsItem extends StatelessWidget {
-  TransactionsItem(
-      {Key? key,
+  const TransactionsItem({
+    Key? key,
       required this.transactions,
       required this.itemIndex,
-      required this.removeTransaction})
+      required this.removeTransaction,
+    })
       : super(key: key);
 
   final List<Transaction> transactions;
   final int itemIndex;
-  Function removeTransaction;
+  final Function removeTransaction;
+
+  void removeItem() {
+    removeTransaction(transactions[itemIndex].id);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +42,24 @@ class TransactionsItem extends StatelessWidget {
               .format(transactions[itemIndex].date),
           style: const TextStyle(fontSize: 13),
         ),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete),
-          color: Theme.of(context).errorColor,
-          onPressed: () {
-            removeTransaction(transactions[itemIndex].id);
-            // print('transactions[itemIndex].id: ${transactions[itemIndex].id}');
-          },
-        ),
+        trailing: MediaQuery.of(context).size.width > 460
+            ? OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                    primary: Theme.of(context).errorColor),
+                onPressed: removeItem,
+                icon: const Icon(
+                  Icons.delete,
+                ),
+                label: Text(
+                  'Delete item',
+                  style: TextStyle(color: Theme.of(context).errorColor),
+                ),
+              )
+            : IconButton(
+                icon: const Icon(Icons.delete),
+                color: Theme.of(context).errorColor,
+                onPressed: removeItem,
+              ),
       ),
     );
   }
