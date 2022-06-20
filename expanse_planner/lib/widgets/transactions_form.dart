@@ -8,16 +8,44 @@ import './adaptive_button.dart';
 class TransactionsForm extends StatefulWidget {
   final Function onAddPress;
 
-  const TransactionsForm({required this.onAddPress});
+  TransactionsForm({required this.onAddPress}) {
+    print('1. CONSTRUCTOR');
+  }
 
   @override
-  State<TransactionsForm> createState() => _TransactionsFormState();
+  State<TransactionsForm> createState() {
+      print('2. create State');
+      return _TransactionsFormState();
+    }
 }
 
 class _TransactionsFormState extends State<TransactionsForm> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   DateTime _selectedDate = DateTime.now();
+
+  _TransactionsFormState() {
+    print('3. CONSTRUCTOR _TransactionsFormState');
+  }
+
+  @override
+  void initState() {
+    print('4. initState');
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant TransactionsForm oldWidget) {
+
+    print('5. didUpdateWidget');
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    print('6. dispose');
+    super.dispose();
+  }
 
   void _onSubmit() {
     final title = _titleController.text;

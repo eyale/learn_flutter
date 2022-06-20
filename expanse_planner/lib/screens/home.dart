@@ -58,13 +58,57 @@ class _MyHomePageState extends State<MyHomePage> {
     }).toList();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    print('🔁 build _MyHomePageState');
-    final mq = MediaQuery.of(context);
-    final isLandscape = mq.orientation == Orientation.landscape;
+  List<Widget> _buildLandscapeContent({
+    required MediaQueryData mq,
+    required PreferredSizeWidget appBar,
+    required Widget transactionsList,
+  }) {
+    return [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Show chart: ',
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          Switch.adaptive(
+              activeColor: Theme.of(context).primaryColor,
+              value: _isChartShow,
+              onChanged: _toggleShowChart),
+        ],
+      ),
+      _isChartShow
+          ? SizedBox(
+              width: double.infinity,
+              height: (mq.size.height -
+                      appBar.preferredSize.height -
+                      mq.padding.top) *
+                  0.6,
+              child: Chart(recentTransactions: _recentTransactions),
+            )
+          : transactionsList
+    ];
+  }
 
-    final PreferredSizeWidget appBar = Platform.isIOS
+  List<Widget> _buildPortraitContent({
+    required MediaQueryData mq,
+    required PreferredSizeWidget appBar,
+    required Widget transactionsList,
+  }) {
+    return [
+      SizedBox(
+        width: double.infinity,
+        height:
+            (mq.size.height - appBar.preferredSize.height - mq.padding.top) *
+                0.4,
+        child: Chart(recentTransactions: _recentTransactions),
+      ),
+      transactionsList
+    ];
+  }
+
+  PreferredSizeWidget _buildAppBar() {
+    return Platform.isIOS
         ? CupertinoNavigationBar(
             middle: Text(
               'Expanse Planner',
@@ -95,6 +139,15 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ],
           ) as PreferredSizeWidget;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print('🔁 build _MyHomePageState');
+    final mq = MediaQuery.of(context);
+    final isLandscape = mq.orientation == Orientation.landscape;
+
+    final PreferredSizeWidget appBar = _buildAppBar();
 
     final transactionsList = SizedBox(
       height:
@@ -111,40 +164,11 @@ class _MyHomePageState extends State<MyHomePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               if (isLandscape)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Show chart: ',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    Switch.adaptive(
-                        activeColor: Theme.of(context).primaryColor,
-                        value: _isChartShow,
-                        onChanged: _toggleShowChart),
-                  ],
-                ),
+                ..._buildLandscapeContent(
+                    mq: mq, appBar: appBar, transactionsList: transactionsList),
               if (!isLandscape)
-                SizedBox(
-                  width: double.infinity,
-                  height: (mq.size.height -
-                          appBar.preferredSize.height -
-                          mq.padding.top) *
-                      0.4,
-                  child: Chart(recentTransactions: _recentTransactions),
-                ),
-              if (!isLandscape) transactionsList,
-              if (isLandscape)
-                _isChartShow
-                    ? SizedBox(
-                        width: double.infinity,
-                        height: (mq.size.height -
-                                appBar.preferredSize.height -
-                                mq.padding.top) *
-                            0.6,
-                        child: Chart(recentTransactions: _recentTransactions),
-                      )
-                    : transactionsList,
+                ..._buildPortraitContent(
+                    mq: mq, appBar: appBar, transactionsList: transactionsList),
             ],
           ),
         ),
