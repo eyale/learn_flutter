@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Expanse planner',
       theme: ThemeData(
-        primarySwatch: Colors.lime,
+        primarySwatch: Colors.blueGrey,
         fontFamily: 'DMSans',
         textTheme: ThemeData.light().textTheme.copyWith(
               // Variant 1 - uncomment and comment Variant 2

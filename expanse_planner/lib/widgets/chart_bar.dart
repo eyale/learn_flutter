@@ -14,13 +14,13 @@ class ChartBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('📊 build Chart');
+    print('📊 build ChartBar');
     return LayoutBuilder(
       builder: (layoutBuilderContext, constraints) {
         return Column(
           children: [
             SizedBox(
-                height: constraints.maxHeight * 0.15,
+                height: constraints.maxHeight * 0.10,
                 child:
                     FittedBox(child: Text('\$${amount.toStringAsFixed(1)}'))),
             SizedBox(
@@ -54,7 +54,7 @@ class ChartBar extends StatelessWidget {
               height: constraints.maxHeight * 0.05,
             ),
             SizedBox(
-              height: constraints.maxHeight * 0.15,
+              height: constraints.maxHeight * 0.10,
               child: FittedBox(child: Text(label)),
             ),
           ],

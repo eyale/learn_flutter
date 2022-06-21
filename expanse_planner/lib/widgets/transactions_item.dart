@@ -1,23 +1,41 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../models/transaction.dart';
 
-class TransactionsItem extends StatelessWidget {
+class TransactionsItem extends StatefulWidget {
   const TransactionsItem({
     Key? key,
-      required this.transactions,
-      required this.itemIndex,
-      required this.removeTransaction,
-    })
-      : super(key: key);
+    required this.transaction,
+    required this.removeTransaction,
+  }) : super(key: key);
 
-  final List<Transaction> transactions;
-  final int itemIndex;
+  final Transaction transaction;
   final Function removeTransaction;
 
+  @override
+  State<TransactionsItem> createState() => _TransactionsItemState();
+}
+
+class _TransactionsItemState extends State<TransactionsItem> {
+  late Color _avatarColor;
+  @override
+  void initState() {
+    super.initState();
+
+    const avatarColors = [
+      Colors.amber,
+      Colors.deepPurple,
+      Colors.cyan,
+      Colors.redAccent
+    ];
+    _avatarColor = avatarColors[Random().nextInt(avatarColors.length)];
+  }
+
   void removeItem() {
-    removeTransaction(transactions[itemIndex].id);
+    widget.removeTransaction(widget.transaction.id);
   }
 
   @override
@@ -26,20 +44,22 @@ class TransactionsItem extends StatelessWidget {
       elevation: 5,
       child: ListTile(
         leading: CircleAvatar(
+          backgroundColor: _avatarColor,
           radius: 30,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: FittedBox(
               child: Text(
-                  '\$${transactions[itemIndex].amount.toStringAsFixed(2)}'),
+                  '\$${widget.transaction.amount.toStringAsFixed(2)}',
+                   style: const TextStyle(color: Colors.white,),),
             ),
           ),
         ),
-        title: Text(transactions[itemIndex].title),
+        title: Text(widget.transaction.title),
         subtitle: Text(
           DateFormat.yMMMMd('en_US')
               .add_Hm()
-              .format(transactions[itemIndex].date),
+              .format(widget.transaction.date),
           style: const TextStyle(fontSize: 13),
         ),
         trailing: MediaQuery.of(context).size.width > 460

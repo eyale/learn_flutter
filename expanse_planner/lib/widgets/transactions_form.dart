@@ -30,21 +30,20 @@ class _TransactionsFormState extends State<TransactionsForm> {
 
   @override
   void initState() {
-    print('4. initState');
     super.initState();
+    print('4. initState');
   }
 
   @override
   void didUpdateWidget(covariant TransactionsForm oldWidget) {
-
-    print('5. didUpdateWidget');
     super.didUpdateWidget(oldWidget);
+    print('5. didUpdateWidget');
   }
 
   @override
   void dispose() {
-    print('6. dispose');
     super.dispose();
+    print('6. dispose');
   }
 
   void _onSubmit() {
