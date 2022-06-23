@@ -3,16 +3,11 @@ import 'package:flutter/material.dart';
 import '../widgets/category_list.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  static String routeName = '/';
+  static String routeName = '/categories';
   const CategoriesScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Daily meals'),
-      ),
-      body: const CategoryList(),
-    );
+    return const CategoryList();
   }
 }

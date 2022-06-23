@@ -108,7 +108,22 @@ class MealDetailsScreen extends StatelessWidget {
             getContainer(
               child: ListView.builder(
                 itemBuilder: (buildContext, index) => ListTile(
-                  leading: CircleAvatar(backgroundColor: color,child: Text('#${index+1}', style: Theme.of(context).textTheme.bodyText1),),
+                  leading: CircleAvatar(
+                    backgroundColor: color,
+                    child: Text('#${index+1}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          offset: Offset(0, 0),
+                          blurRadius: 1.0,
+                          color: Color.fromARGB(255, 248, 248, 248),
+                        ),
+                      ],
+                      fontFamily: 'Nunito',
+                      fontSize: 12
+                    )
+                  ),),
                   title: Text(
                       steps[index],
                       style: Theme.of(context).textTheme.bodyText1,

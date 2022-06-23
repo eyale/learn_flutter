@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import './screens/categories.dart';
+import './screens/tabs.dart';
 import './routes.dart';
 
 void main() {
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
             primary: const Color.fromARGB(248, 173, 162, 201),
             secondary: Colors.indigo,
           )),
-      initialRoute: CategoriesScreen.routeName,
+      initialRoute: TabsScreen.routeName,
       routes: getRoutesFrom(context: context),
       // onGenerateRoute: (data) {
       //   print('onGenerateRoute data: $data');
