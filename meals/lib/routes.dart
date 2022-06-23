@@ -34,10 +34,7 @@ Map<String, Widget Function(BuildContext)> getRoutesFrom(
           as MealDetailsScreenArguments;
 
       return MealDetailsScreen(
-        title: routeArguments.title,
-        imageUrl: routeArguments.imageUrl,
-        ingredients: routeArguments.ingredients,
-        steps: routeArguments.steps,
+        meal: routeArguments.meal,
         color: routeArguments.color,
       );
     }

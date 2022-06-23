@@ -4,38 +4,30 @@ import '../models/meal.dart';
 import '../screens/meal_details.dart';
 
 class MealItem extends StatelessWidget {
-  final String title;
-  final String imageUrl;
-  final int duration;
-  final Complexity complexity;
-  final Affordability affordability;
-  final List<String> ingredients;
-  final List<String> steps;
+  final MealModel meal;
   final Color color;
+  final Function removeMealItem;
 
   const MealItem({
     Key? key,
-    required this.title,
-    required this.imageUrl,
-    required this.duration,
-    required this.complexity,
-    required this.affordability,
-    required this.ingredients,
-    required this.steps,
+    required this.meal,
     required this.color,
+    required this.removeMealItem,
   }) : super(key: key);
 
   void selectMeal({required BuildContext buildContext}) {
-    Navigator.of(buildContext).pushNamed(
+    Navigator.of(buildContext)
+        .pushNamed(
       MealDetailsScreen.routeName,
-      arguments: MealDetailsScreenArguments(
-        title: title,
-        imageUrl: imageUrl,
-        ingredients: ingredients,
-        steps: steps,
-        color: color,
-      )
-    );
+      arguments: MealDetailsScreenArguments(meal: meal, color: color),
+    )
+        .then((dataFromScreen) {
+      print('${MealDetailsScreen.routeName} data: $dataFromScreen');
+
+      if (dataFromScreen != null) {
+        removeMealItem(dataFromScreen);
+      }
+    });
   }
 
   @override
@@ -57,7 +49,7 @@ class MealItem extends StatelessWidget {
                       topLeft: Radius.circular(15),
                       topRight: Radius.circular(15)),
                   child: Image.network(
-                    imageUrl,
+                    meal.imageUrl,
                     height: 250,
                     width: double.infinity,
                     fit: BoxFit.cover,
@@ -75,7 +67,7 @@ class MealItem extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                     child: Text(
-                      title,
+                      meal.title,
                       textAlign: TextAlign.right,
                       style: const TextStyle(
                           fontSize: 26,
@@ -101,7 +93,7 @@ class MealItem extends StatelessWidget {
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        '$duration min',
+                        '${meal.duration} min',
                         style: TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 14,
@@ -118,7 +110,7 @@ class MealItem extends StatelessWidget {
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        complexity.name,
+                        meal.complexity.name,
                         style: TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 14,
@@ -135,7 +127,7 @@ class MealItem extends StatelessWidget {
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        affordability.name,
+                        meal.affordability.name,
                         style: TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 14,

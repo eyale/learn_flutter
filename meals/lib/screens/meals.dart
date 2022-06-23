@@ -17,7 +17,7 @@ class MealsScreenArguments {
   });
 }
 
-class MealsScreen extends StatelessWidget {
+class MealsScreen extends StatefulWidget {
   static String routeName = '/meals';
 
   final String id;
@@ -34,29 +34,33 @@ class MealsScreen extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<MealsScreen> createState() => _MealsScreenState();
+}
+
+class _MealsScreenState extends State<MealsScreen> {
+  void removeMealItem({required String byId}) {
+    print(byId);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
-        backgroundColor: color,
+        title: Text(widget.title),
+        backgroundColor: widget.color,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: ListView.builder(
-          itemBuilder: (context, index) {
-            return MealItem(
-              title: meals[index].title,
-              imageUrl: meals[index].imageUrl,
-              duration: meals[index].duration,
-              complexity: meals[index].complexity,
-              affordability: meals[index].affordability,
-              ingredients: meals[index].ingredients,
-              steps: meals[index].steps,
-              color: color,
-            );
-          },
-          itemCount: meals.length
-          ),
+            itemBuilder: (context, index) {
+              return MealItem(
+                meal: widget.meals[index],
+                color: widget.color,
+                removeMealItem: (id) =>
+                    removeMealItem(byId: id),
+              );
+            },
+            itemCount: widget.meals.length),
       ),
     );
   }
