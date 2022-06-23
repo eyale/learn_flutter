@@ -40,21 +40,24 @@ class MealsScreen extends StatelessWidget {
         title: Text(title),
         backgroundColor: color,
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          return MealItem(
-            title: meals[index].title,
-            imageUrl: meals[index].imageUrl,
-            duration: meals[index].duration,
-            complexity: meals[index].complexity,
-            affordability: meals[index].affordability,
-            ingredients: meals[index].ingredients,
-            steps: meals[index].steps,
-            color: color,
-          );
-        },
-        itemCount: meals.length
-        ),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: ListView.builder(
+          itemBuilder: (context, index) {
+            return MealItem(
+              title: meals[index].title,
+              imageUrl: meals[index].imageUrl,
+              duration: meals[index].duration,
+              complexity: meals[index].complexity,
+              affordability: meals[index].affordability,
+              ingredients: meals[index].ingredients,
+              steps: meals[index].steps,
+              color: color,
+            );
+          },
+          itemCount: meals.length
+          ),
+      ),
     );
   }
 }

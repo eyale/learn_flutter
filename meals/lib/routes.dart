@@ -4,6 +4,7 @@ import './screens/tabs.dart';
 import './screens/categories.dart';
 import './screens/meals.dart';
 import './screens/meal_details.dart';
+import './screens/filters.dart';
 
 Map<String, Widget Function(BuildContext)> getRoutesFrom(
     {required BuildContext context}) {
@@ -13,6 +14,9 @@ Map<String, Widget Function(BuildContext)> getRoutesFrom(
     },
     CategoriesScreen.routeName: (BuildContext buildContext) {
       return const CategoriesScreen();
+    },
+    FiltersScreen.routeName: (BuildContext buildContext) {
+      return const FiltersScreen();
     },
     MealsScreen.routeName: (BuildContext buildContext) {
       final routeArguments = ModalRoute.of(buildContext)?.settings.arguments
