@@ -17,12 +17,12 @@ class CustomDrawer extends StatelessWidget {
         leading: Icon(
           icon,
           size: 30,
-          color: Colors.blueGrey,
+          color: Colors.indigo,
         ),
         title: Text(
           title,
           style: const TextStyle(
-            color: Colors.blueGrey,
+            color: Colors.indigo,
             fontSize: 22,
             fontWeight: FontWeight.bold,
           ),
@@ -58,7 +58,8 @@ class CustomDrawer extends StatelessWidget {
             icon: Icons.settings,
             title: 'Filters',
             onTap: () {
-              Navigator.of(context).pushReplacementNamed(FiltersScreen.routeName);
+              Navigator.of(context)
+                  .pushReplacementNamed(FiltersScreen.routeName);
             })
       ]),
     );

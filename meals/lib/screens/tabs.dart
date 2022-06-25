@@ -5,6 +5,8 @@ import './favorites.dart';
 
 import '../widgets/custom_drawer.dart';
 
+import '../models/meal.dart';
+
 class TabBarData {
   final String title;
   final Widget tab;
@@ -20,7 +22,12 @@ class TabBarData {
 class TabsScreen extends StatefulWidget {
   static String routeName = '/tabs-screen';
 
-  const TabsScreen({Key? key}) : super(key: key);
+  final List<MealModel> meals;
+
+  const TabsScreen({
+    Key? key,
+    required this.meals,
+  }) : super(key: key);
 
   @override
   State<TabsScreen> createState() => _TabsScreenState();
@@ -41,18 +48,19 @@ class _TabsScreenState extends State<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-  final List<TabBarData> tabbarViews = [
+    final List<TabBarData> tabbarViews = [
       TabBarData(
-      title: 'categories',
-      tab: const CategoriesScreen(),
-      color: Theme.of(context).colorScheme.primary,
-    ),
-     TabBarData(
-      title: 'favorites',
-      tab: const FavoritesScreen(),
-      color: Theme.of(context).colorScheme.secondary
+        title: 'categories',
+        tab: CategoriesScreen(
+          meals: widget.meals,
+        ),
+        color: Theme.of(context).colorScheme.primary,
       ),
-  ];
+      TabBarData(
+          title: 'favorites',
+          tab: const FavoritesScreen(),
+          color: Theme.of(context).colorScheme.secondary),
+    ];
 
     return Scaffold(
       appBar: AppBar(

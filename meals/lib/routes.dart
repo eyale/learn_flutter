@@ -6,17 +6,27 @@ import './screens/meals.dart';
 import './screens/meal_details.dart';
 import './screens/filters.dart';
 
-Map<String, Widget Function(BuildContext)> getRoutesFrom(
-    {required BuildContext context}) {
+import './models/meal.dart';
+import 'main.dart';
+
+Map<String, Widget Function(BuildContext)> getRoutesFrom({
+  required BuildContext context,
+  required Function closureToPassData,
+  required List<MealModel> meals,
+  required FilterValues filters,
+}) {
   return {
     TabsScreen.routeName: (BuildContext buildContext) {
-      return const TabsScreen();
+      return TabsScreen(meals: meals);
     },
     CategoriesScreen.routeName: (BuildContext buildContext) {
-      return const CategoriesScreen();
+      return CategoriesScreen(meals: meals);
     },
     FiltersScreen.routeName: (BuildContext buildContext) {
-      return const FiltersScreen();
+      return FiltersScreen(
+        saveFilters: closureToPassData,
+        filters: filters,
+      );
     },
     MealsScreen.routeName: (BuildContext buildContext) {
       final routeArguments = ModalRoute.of(buildContext)?.settings.arguments

@@ -39,7 +39,9 @@ class MealsScreen extends StatefulWidget {
 
 class _MealsScreenState extends State<MealsScreen> {
   void removeMealItem({required String byId}) {
-    print(byId);
+    setState(() {
+      widget.meals.removeWhere((element) => element.id == byId);
+    });
   }
 
   @override
@@ -56,8 +58,7 @@ class _MealsScreenState extends State<MealsScreen> {
               return MealItem(
                 meal: widget.meals[index],
                 color: widget.color,
-                removeMealItem: (id) =>
-                    removeMealItem(byId: id),
+                removeMealItem: (id) => removeMealItem(byId: id),
               );
             },
             itemCount: widget.meals.length),
