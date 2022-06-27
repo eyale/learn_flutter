@@ -41,6 +41,27 @@ class _MyAppState extends State<MyApp> {
   );
 
   List<MealModel> _availableMeals = DUMMY_MEALS;
+  final List<MealModel> _favoriteMeals = [];
+
+  void _toggleFavorite(String mealId) {
+    final existingIndex =
+        _favoriteMeals.indexWhere((element) => element.id == mealId);
+
+    if (existingIndex >= 0) {
+      setState(() {
+        _favoriteMeals.removeAt(existingIndex);
+      });
+    } else {
+      setState(() {
+        _favoriteMeals
+            .add(DUMMY_MEALS.firstWhere((element) => element.id == mealId));
+      });
+    }
+  }
+
+  bool _isMealFavorite(String id) {
+    return _favoriteMeals.any((element) => element.id == id);
+  }
 
   void _setFilters(FilterValues filtersData) {
     setState(() {
@@ -86,11 +107,13 @@ class _MyAppState extends State<MyApp> {
           )),
       initialRoute: TabsScreen.routeName,
       routes: getRoutesFrom(
-        context: context,
-        closureToPassData: _setFilters,
-        meals: _availableMeals,
-        filters: filters,
-      ),
+          context: context,
+          closureToPassData: _setFilters,
+          meals: _availableMeals,
+          favorites: _favoriteMeals,
+          filters: filters,
+          toggleFavorite: _toggleFavorite,
+          isMealFavorite: _isMealFavorite),
       // onGenerateRoute: (data) {
       //   print('onGenerateRoute data: $data');
       //   return MaterialPageRoute(builder: (context) => const CategoriesScreen());

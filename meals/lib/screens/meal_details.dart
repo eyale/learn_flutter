@@ -16,11 +16,15 @@ class MealDetailsScreen extends StatelessWidget {
 
   final MealModel meal;
   final Color color;
+  final Function toggleFavorite;
+  final Function isMealFavorite;
 
   const MealDetailsScreen({
     Key? key,
     required this.meal,
     required this.color,
+    required this.toggleFavorite,
+    required this.isMealFavorite,
   }) : super(key: key);
 
   Container getSectionTitle({
@@ -126,9 +130,10 @@ class MealDetailsScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.error,
         elevation: 10,
         onPressed: () {
-          Navigator.of(context).pop(meal.id);
+          toggleFavorite(meal.id);
         },
-        child: const Icon(Icons.delete_outline),
+        child: Icon(
+            isMealFavorite(meal.id) ? Icons.star : Icons.star_border_outlined),
       ),
     );
   }

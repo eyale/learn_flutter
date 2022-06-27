@@ -23,10 +23,14 @@ class TabsScreen extends StatefulWidget {
   static String routeName = '/tabs-screen';
 
   final List<MealModel> meals;
+  final List<MealModel> favorites;
+  final Function toggleFavorite;
 
   const TabsScreen({
     Key? key,
     required this.meals,
+    required this.favorites,
+    required this.toggleFavorite,
   }) : super(key: key);
 
   @override
@@ -58,7 +62,10 @@ class _TabsScreenState extends State<TabsScreen> {
       ),
       TabBarData(
           title: 'favorites',
-          tab: const FavoritesScreen(),
+          tab: FavoritesScreen(
+            favorites: widget.favorites,
+            toggleFavorite: widget.toggleFavorite,
+          ),
           color: Theme.of(context).colorScheme.secondary),
     ];
 

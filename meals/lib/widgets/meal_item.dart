@@ -6,28 +6,18 @@ import '../screens/meal_details.dart';
 class MealItem extends StatelessWidget {
   final MealModel meal;
   final Color color;
-  final Function removeMealItem;
 
   const MealItem({
     Key? key,
     required this.meal,
     required this.color,
-    required this.removeMealItem,
   }) : super(key: key);
 
   void selectMeal({required BuildContext buildContext}) {
-    Navigator.of(buildContext)
-        .pushNamed(
+    Navigator.of(buildContext).pushNamed(
       MealDetailsScreen.routeName,
       arguments: MealDetailsScreenArguments(meal: meal, color: color),
-    )
-        .then((dataFromScreen) {
-      print('${MealDetailsScreen.routeName} data: $dataFromScreen');
-
-      if (dataFromScreen != null) {
-        removeMealItem(dataFromScreen);
-      }
-    });
+    );
   }
 
   @override

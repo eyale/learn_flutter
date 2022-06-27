@@ -13,11 +13,15 @@ Map<String, Widget Function(BuildContext)> getRoutesFrom({
   required BuildContext context,
   required Function closureToPassData,
   required List<MealModel> meals,
+  required List<MealModel> favorites,
   required FilterValues filters,
+  required Function toggleFavorite,
+  required Function isMealFavorite,
 }) {
   return {
     TabsScreen.routeName: (BuildContext buildContext) {
-      return TabsScreen(meals: meals);
+      return TabsScreen(
+          meals: meals, favorites: favorites, toggleFavorite: toggleFavorite);
     },
     CategoriesScreen.routeName: (BuildContext buildContext) {
       return CategoriesScreen(meals: meals);
@@ -46,6 +50,8 @@ Map<String, Widget Function(BuildContext)> getRoutesFrom({
       return MealDetailsScreen(
         meal: routeArguments.meal,
         color: routeArguments.color,
+        toggleFavorite: toggleFavorite,
+        isMealFavorite: isMealFavorite,
       );
     }
   };

@@ -54,14 +54,14 @@ class _MealsScreenState extends State<MealsScreen> {
       body: Padding(
         padding: const EdgeInsets.all(10),
         child: ListView.builder(
-            itemBuilder: (context, index) {
-              return MealItem(
-                meal: widget.meals[index],
-                color: widget.color,
-                removeMealItem: (id) => removeMealItem(byId: id),
-              );
-            },
-            itemCount: widget.meals.length),
+          itemBuilder: (context, index) {
+            return MealItem(
+              meal: widget.meals[index],
+              color: widget.color,
+            );
+          },
+          itemCount: widget.meals.length,
+        ),
       ),
     );
   }
