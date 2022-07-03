@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import './screens/products_overview.dart';
-import './screens/product_details.dart';
-
+import './providers/cart.dart';
 import './providers/products_provider.dart';
+import './screens/cart.dart';
+import './screens/product_details.dart';
+import './screens/products_overview.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,24 +16,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => Products(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => Products()),
+        ChangeNotifierProvider(create: (_) => Cart()),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch().copyWith(
-              secondary: Colors.pinkAccent,
-              primary: Colors.blueGrey
-          ),
-          fontFamily: 'Lato'
-        ),
+            colorScheme: ColorScheme.fromSwatch().copyWith(
+                secondary: Colors.pinkAccent, primary: Colors.blueGrey),
+            fontFamily: 'Lato'),
         home: ProductsOverviewScreen(),
         routes: {
-          ProductDetailsScreen.routeName: (context) => ProductDetailsScreen(),
+          ProductDetailsScreen.routeName: (_) => const ProductDetailsScreen(),
+          CartScreen.routeName: (_) => const CartScreen(),
         },
       ),
     );
   }
 }
-

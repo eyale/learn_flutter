@@ -39,7 +39,11 @@ class Products with ChangeNotifier {
   ];
 
   List<Product> get items {
-    return [..._items];
+    return _items.toList();
+  }
+
+  List<Product> get filteredItems {
+    return _items.where((element) => element.isFavorite == true).toList();
   }
 
   Product getBy({required String id}) {
