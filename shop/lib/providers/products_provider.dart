@@ -38,6 +38,10 @@ class Products with ChangeNotifier {
     ),
   ];
 
+  int get count {
+    return _items.length;
+  }
+
   List<Product> get items {
     return _items.toList();
   }
@@ -50,8 +54,19 @@ class Products with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
-  void addProduct() {
-    // _items.add(value);
+  void addProduct(Product product) {
+    final Product newProduct = product.copyWith(id: DateTime.now().toString());
+
+    _items.add(newProduct);
+
     notifyListeners();
+  }
+
+  void updateProduct({required String byId, required Product withNewProduct}) {
+    final productIndex = _items.indexWhere((element) => element.id == byId);
+    if (productIndex >= 0) {
+      _items[productIndex] = withNewProduct;
+      notifyListeners();
+    }
   }
 }

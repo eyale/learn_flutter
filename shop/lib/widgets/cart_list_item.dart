@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,15 +19,42 @@ class CartListItem extends StatelessWidget {
     Cart providerCart = Provider.of<Cart>(context, listen: false);
     return Dismissible(
       direction: DismissDirection.endToStart,
-      onDismissed: (direction) {
+      onDismissed: (DismissDirection direction) {
         providerCart.removeCartItem(productId: productId);
+      },
+      confirmDismiss: (DismissDirection direction) {
+        return showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return CupertinoAlertDialog(
+                title: const Text('Warning!'),
+                content: const Text('Do you really want to remove this item?'),
+                actions: [
+                  CupertinoDialogAction(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: const Text(
+                        'No',
+                        style: TextStyle(color: Colors.black),
+                      )),
+                  CupertinoDialogAction(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Text('Remove',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.error))),
+                ],
+              );
+            });
       },
       key: ValueKey(cart.id),
       background: Container(
         color: Theme.of(context).colorScheme.error,
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 30),
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 5),
         child: const Icon(
           Icons.delete_outline,
           color: Colors.white,
@@ -34,7 +62,7 @@ class CartListItem extends StatelessWidget {
         ),
       ),
       child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+        margin: const EdgeInsets.symmetric(vertical: 5),
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: ListTile(

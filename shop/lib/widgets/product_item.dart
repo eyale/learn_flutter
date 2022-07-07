@@ -12,7 +12,7 @@ class ProductItem extends StatelessWidget {
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context);
     return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(10)),
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
       child: GridTile(
         footer: GridTileBar(
           backgroundColor: Colors.black87,
@@ -33,8 +33,22 @@ class ProductItem extends StatelessWidget {
                 : CupertinoIcons.shopping_cart),
             color: Theme.of(context).colorScheme.secondary,
             onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
               cart.addCartItem(product: product);
-              // cart.toggleCartItem(product: product);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  backgroundColor: Colors.black,
+                  duration: const Duration(seconds: 2),
+                  action: SnackBarAction(
+                    label: 'UNDO',
+                    textColor: Theme.of(context).colorScheme.secondary,
+                    onPressed: () {
+                      cart.removeLastAdded(productId: product.id);
+                    },
+                  ),
+                  content: Text(
+                    '${product.title} added to cart',
+                    style: const TextStyle(fontSize: 18),
+                  )));
             },
           ),
           title: FittedBox(

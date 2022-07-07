@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import './cart.dart';
 import '../providers/cart.dart';
+import '../widgets/app_drawer.dart';
 import '../widgets/badge.dart';
 import '../widgets/products_grid.dart';
 
@@ -31,20 +32,21 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(
-        title: Text('My Shop'),
-        leading: Consumer<Cart>(
-          builder: (context, item, childWidget) => Badge(
-              value: item.count.toString(),
-              color: Colors.pinkAccent,
-              child: IconButton(
-                icon: const Icon(CupertinoIcons.shopping_cart),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(CartScreen.routeName);
-                },
-              )),
-        ),
+        title: const Text('My Shop'),
         actions: [
+          Consumer<Cart>(
+            builder: (context, item, childWidget) => Badge(
+                value: item.count.toString(),
+                color: Colors.pinkAccent,
+                child: IconButton(
+                  icon: const Icon(CupertinoIcons.shopping_cart),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(CartScreen.routeName);
+                  },
+                )),
+          ),
           PopupMenuButton(
             onSelected: (PopupFilterOptions value) {
               setShowFavorites(
@@ -65,8 +67,23 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           ),
         ],
       ),
-      body: ProductsGrid(
-        isShowFavorites: _isShowFavorites,
+      body: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Theme.of(context).colorScheme.primary,
+                Colors.limeAccent,
+                Colors.white,
+              ],
+            ),
+          ),
+          child: ProductsGrid(
+            isShowFavorites: _isShowFavorites,
+          ),
+        ),
       ),
     );
   }
