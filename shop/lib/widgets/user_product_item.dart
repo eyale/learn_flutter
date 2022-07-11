@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../screens/edit_products.dart';
+
+import '../providers/products_provider.dart';
 
 class UserProductItem extends StatelessWidget {
   final String id;
@@ -17,6 +20,7 @@ class UserProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final productsProvider = Provider.of<Products>(context);
     return Column(
       children: [
         ListTile(
@@ -30,7 +34,9 @@ class UserProductItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      productsProvider.remove(byId: id);
+                    },
                     icon: Icon(
                       CupertinoIcons.delete,
                       color: Theme.of(context).colorScheme.error,

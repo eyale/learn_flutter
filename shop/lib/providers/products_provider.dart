@@ -54,7 +54,7 @@ class Products with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
-  void addProduct(Product product) {
+  void add(Product product) {
     final Product newProduct = product.copyWith(id: DateTime.now().toString());
 
     _items.add(newProduct);
@@ -62,11 +62,16 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateProduct({required String byId, required Product withNewProduct}) {
+  void update({required String byId, required Product withNewProduct}) {
     final productIndex = _items.indexWhere((element) => element.id == byId);
     if (productIndex >= 0) {
       _items[productIndex] = withNewProduct;
       notifyListeners();
     }
+  }
+
+  void remove({required String byId}) {
+    _items.removeWhere((element) => element.id == byId);
+    notifyListeners();
   }
 }

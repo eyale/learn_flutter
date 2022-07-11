@@ -68,10 +68,10 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
         .where((element) => element.id == _editedProduct.id);
 
     if (isInProductsAlready.isNotEmpty) {
-      productsProvider.updateProduct(
+      productsProvider.update(
           byId: _editedProduct.id, withNewProduct: _editedProduct);
     } else {
-      productsProvider.addProduct(_editedProduct);
+      productsProvider.add(_editedProduct);
     }
 
     Navigator.of(context).pop();
@@ -83,7 +83,8 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
       appBar: AppBar(
         title: const Text('Edit'),
         actions: [
-          IconButton(onPressed: _onSave, icon: Icon(CupertinoIcons.floppy_disk))
+          IconButton(
+              onPressed: _onSave, icon: const Icon(CupertinoIcons.floppy_disk))
         ],
       ),
       body: SafeArea(
@@ -155,7 +156,7 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                       onChanged: (newVal) {
                         if (double.tryParse(newVal) == null) return;
                         _editedProduct = _editedProduct.copyWith(
-                            price: double.parse('$newVal'));
+                            price: double.parse(newVal));
                       },
                     ),
                   ),
