@@ -28,16 +28,16 @@ class Products with ChangeNotifier {
 
   Future get() async {
     try {
-      var response = await Api.instance.get(path: 'products.json');
-      debugPrint('response: ${convert.jsonEncode(response.body)}');
-      final decodedData =
+      final response = await Api.instance.get(path: 'products.json');
+
+      if (response.body == 'null') return;
+
+      final decodedBody =
           convert.jsonDecode(response.body) as Map<String, dynamic>;
 
       List<Product> loadedProducts = [];
 
-      decodedData.forEach((key, value) {
-        debugPrint('key,$key, value: $value');
-
+      decodedBody.forEach((key, value) {
         loadedProducts.add(Product(
           id: key,
           title: value['title'],
@@ -59,7 +59,7 @@ class Products with ChangeNotifier {
     final Product newProduct = product.copyWith(id: DateTime.now().toString());
 
     try {
-      var response = await Api.instance
+      final response = await Api.instance
           .post(path: 'products.json', jsonEncoded: newProduct.jsonEncode());
       final id = convert.jsonDecode(response.body);
       final Product copiedProduct = product.copyWith(id: id['name']);
@@ -95,7 +95,7 @@ class Products with ChangeNotifier {
 
   Future delete({required String byId}) async {
     try {
-      var response = await Api.instance.delete(path: 'products/$byId.json');
+      final response = await Api.instance.delete(path: 'products/$byId.json');
       final indexOfDeletingProduct =
           _items.indexWhere((element) => element.id == byId);
       final deletingProduct = _items[indexOfDeletingProduct];

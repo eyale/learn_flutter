@@ -21,14 +21,16 @@ class _UserProductsScreenState extends State<UserProductsScreen> {
     bool isLoading = false;
     final products = Provider.of<Products>(context);
 
-    Future getProducts() {
+    void toggleIsLoadingState() {
       setState(() {
         isLoading = !isLoading;
       });
+    }
+
+    Future getProducts() {
+      toggleIsLoadingState();
       return products.get().then((_) {
-        setState(() {
-          isLoading = !isLoading;
-        });
+        toggleIsLoadingState();
       });
     }
 

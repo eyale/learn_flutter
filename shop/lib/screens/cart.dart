@@ -59,37 +59,7 @@ class CartScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              Theme.of(context).colorScheme.secondary),
-                        ),
-                        onPressed: () {
-                          if (cart.items.isEmpty) {
-                            showDialog(
-                                context: context,
-                                builder: (_) {
-                                  return CupertinoAlertDialog(
-                                    title: const Text('Warning!'),
-                                    content: const Text('There is empty cart.'),
-                                    actions: [
-                                      CupertinoDialogAction(
-                                          onPressed: () {
-                                            Navigator.of(context).pop(false);
-                                          },
-                                          child: const Text('Ok'))
-                                    ],
-                                  );
-                                });
-                          } else {
-                            order.addOrder(
-                                products: cart.items.values.toList(),
-                                totalAmount: cart.totalAmount);
-                            cart.clear();
-                          }
-                        },
-                        child: const Text('Order now'),
-                      ),
+                      OrderButton(cart: cart, order: order),
                     ],
                   ),
                 ),
@@ -107,6 +77,78 @@ class CartScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key? key,
+    required this.cart,
+    required this.order,
+  }) : super(key: key);
+
+  final Cart cart;
+  final Order order;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  bool _isLoading = false;
+
+  void toggleIsLoading() {
+    return setState(() {
+      _isLoading = !_isLoading;
+    });
+  }
+
+  Future<dynamic> showCupertinoDialog() {
+    return showDialog(
+        context: context,
+        builder: (_) {
+          return CupertinoAlertDialog(
+            title: const Text('Warning!'),
+            content: const Text('There is empty cart.'),
+            actions: [
+              CupertinoDialogAction(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text('Ok'))
+            ],
+          );
+        });
+  }
+
+  void handleTapOrderNow() async {
+    if (widget.cart.items.isEmpty && !_isLoading) {
+      showCupertinoDialog();
+    } else {
+      toggleIsLoading();
+      await widget.order.add(
+          products: widget.cart.items.values.toList(),
+          totalAmount: widget.cart.totalAmount);
+      toggleIsLoading();
+      widget.cart.clear();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ButtonStyle(
+        backgroundColor:
+            MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
+      ),
+      onPressed: handleTapOrderNow,
+      child: _isLoading
+          ? const SizedBox(
+              width: 30,
+              height: 30,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+              ))
+          : const Text('Order now'),
     );
   }
 }

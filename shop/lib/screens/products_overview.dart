@@ -31,17 +31,22 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
     getProducts();
   }
 
-  Future getProducts() {
+  void toggleIsLoadingState() {
     setState(() {
       _isLoading = !_isLoading;
     });
-    return Future.delayed(Duration.zero, () {
-      Provider.of<Products>(context, listen: false).get().then((_) {
-        setState(() {
-          _isLoading = !_isLoading;
+  }
+
+  Future getProducts() {
+    toggleIsLoadingState();
+    return Future.delayed(
+      Duration.zero,
+      () {
+        Provider.of<Products>(context, listen: false).get().then((_) {
+          toggleIsLoadingState();
         });
-      });
-    });
+      },
+    );
   }
 
   void setShowFavorites({required bool isVisible}) {
