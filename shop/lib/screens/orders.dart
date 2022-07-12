@@ -14,51 +14,45 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen> {
-  bool _isLoading = false;
+  late Future _ordersFuture;
 
-  void toggleIsLoadingState() {
-    setState(() {
-      _isLoading = !_isLoading;
-    });
-  }
-
-  Future getOrders() {
-    toggleIsLoadingState();
-
-    return Future.delayed(
-      Duration.zero,
-      () {
-        Provider.of<Order>(context, listen: false)
-            .get()
-            .then((_) => toggleIsLoadingState());
-      },
-    );
+  Future getOrdersFuture() {
+    return Provider.of<Order>(context, listen: false).get();
   }
 
   @override
   void initState() {
     super.initState();
-    getOrders();
+    _ordersFuture = getOrdersFuture();
   }
 
   @override
   Widget build(BuildContext context) {
-    final ordersProvider = Provider.of<Order>(context);
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(
         title: const Text('orders'),
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: ordersProvider.count,
-              itemBuilder: (context, index) {
-                return OrderListItem(
-                  order: ordersProvider.orders[index],
-                );
-              },
-            ),
+      body: FutureBuilder(
+          future: _ordersFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.error != null) {
+              return Center(child: Text(snapshot.error.toString()));
+            }
+            return Consumer<Order>(builder: (context, item, child) {
+              return ListView.builder(
+                itemCount: item.count,
+                itemBuilder: (context, index) {
+                  return OrderListItem(
+                    order: item.orders[index],
+                  );
+                },
+              );
+            });
+          }),
     );
   }
 }
