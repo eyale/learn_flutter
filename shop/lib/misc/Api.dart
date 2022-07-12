@@ -15,7 +15,7 @@ class Api {
     return await http.delete(uri);
   }
 
-  Future edit({
+  Future update({
     String url = firebaseURL,
     required String path,
     required String jsonEncoded,

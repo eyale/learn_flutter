@@ -39,11 +39,13 @@ class Products with ChangeNotifier {
         debugPrint('key,$key, value: $value');
 
         loadedProducts.add(Product(
-            id: key,
-            title: value['title'],
-            description: value['description'],
-            price: value['price'],
-            imageUrl: value['imageUrl']));
+          id: key,
+          title: value['title'],
+          description: value['description'],
+          price: value['price'],
+          imageUrl: value['imageUrl'],
+          isFavorite: value['isFavorite'],
+        ));
       });
       _items = loadedProducts;
       notifyListeners();
@@ -75,7 +77,7 @@ class Products with ChangeNotifier {
     final productIndex = _items.indexWhere((element) => element.id == byId);
 
     try {
-      var response = await Api.instance.edit(
+      var response = await Api.instance.update(
           path: 'products/$byId.json',
           jsonEncoded: withNewProduct.jsonEncode());
 
@@ -101,9 +103,9 @@ class Products with ChangeNotifier {
 
       if (response.statusCode >= 400) {
         _items.insert(indexOfDeletingProduct, deletingProduct);
-        notifyListeners();
         throw HttpException('Error while trying delete product');
       }
+      notifyListeners();
     } catch (e) {
       debugPrint('e: $e');
       rethrow;

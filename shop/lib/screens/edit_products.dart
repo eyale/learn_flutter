@@ -21,11 +21,13 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
   final _formKey = GlobalKey<FormState>();
   var _isLoading = false;
   var _editedProduct = Product(
-      id: DateTime.now().toString(),
-      title: '',
-      description: '',
-      price: 0,
-      imageUrl: '');
+    id: DateTime.now().toString(),
+    title: '',
+    description: '',
+    price: 0,
+    imageUrl: '',
+    isFavorite: false,
+  );
 
   var _initFormValues = {
     'title': '',

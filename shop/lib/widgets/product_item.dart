@@ -11,6 +11,14 @@ class ProductItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
     final cart = Provider.of<Cart>(context);
+
+    void showSnackBar({required String message}) {
+      final sb = SnackBar(content: Text(message));
+
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(sb);
+    }
+
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(10)),
       child: GridTile(
@@ -21,7 +29,14 @@ class ProductItem extends StatelessWidget {
               icon: Icon(item.isFavorite
                   ? CupertinoIcons.heart_fill
                   : CupertinoIcons.heart),
-              onPressed: item.toggleIsFavorite,
+              onPressed: () async {
+                try {
+                  await product.toggleIsFavorite();
+                } catch (e) {
+                  showSnackBar(message: e.toString());
+                  rethrow;
+                }
+              },
               color: item.isFavorite
                   ? Theme.of(context).colorScheme.secondary
                   : Colors.white,

@@ -38,10 +38,8 @@ class UserProductItem extends StatelessWidget {
                       try {
                         final resp = await productsProvider.delete(byId: id);
                       } catch (e) {
-                        debugPrint('e: $e');
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          // backgroundColor: Colors.blueGrey,
                           content: Text(
                             e.toString(),
                             style: const TextStyle(fontSize: 16),
