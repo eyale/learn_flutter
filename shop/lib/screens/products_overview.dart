@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import './cart.dart';
 import '../providers/cart.dart';
+import '../providers/products_provider.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/badge.dart';
 import '../widgets/products_grid.dart';
@@ -14,7 +15,7 @@ enum PopupFilterOptions {
 }
 
 class ProductsOverviewScreen extends StatefulWidget {
-  ProductsOverviewScreen({Key? key}) : super(key: key);
+  const ProductsOverviewScreen({Key? key}) : super(key: key);
 
   @override
   State<ProductsOverviewScreen> createState() => _ProductsOverviewScreenState();
@@ -22,6 +23,26 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   bool _isShowFavorites = false;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    getProducts();
+  }
+
+  Future getProducts() {
+    setState(() {
+      _isLoading = !_isLoading;
+    });
+    return Future.delayed(Duration.zero, () {
+      Provider.of<Products>(context, listen: false).get().then((_) {
+        setState(() {
+          _isLoading = !_isLoading;
+        });
+      });
+    });
+  }
 
   void setShowFavorites({required bool isVisible}) {
     setState(() {
@@ -67,24 +88,31 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Theme.of(context).colorScheme.primary,
-                Colors.limeAccent,
-                Colors.white,
-              ],
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : RefreshIndicator(
+              onRefresh: getProducts,
+              child: SafeArea(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Theme.of(context).colorScheme.primary,
+                        Colors.limeAccent,
+                        Colors.white,
+                      ],
+                    ),
+                  ),
+                  child: ProductsGrid(
+                    isShowFavorites: _isShowFavorites,
+                  ),
+                ),
+              ),
             ),
-          ),
-          child: ProductsGrid(
-            isShowFavorites: _isShowFavorites,
-          ),
-        ),
-      ),
     );
   }
 }

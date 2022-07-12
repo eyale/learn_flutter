@@ -1,3 +1,5 @@
+import 'dart:convert' as convert;
+
 import 'package:flutter/material.dart';
 
 class Product with ChangeNotifier {
@@ -20,6 +22,17 @@ class Product with ChangeNotifier {
   void toggleIsFavorite() {
     isFavorite = !isFavorite;
     notifyListeners();
+  }
+
+  String jsonEncode() {
+    return convert.jsonEncode({
+      'title': title,
+      'id': id,
+      'description': description,
+      'price': price,
+      'imageUrl': imageUrl,
+      'isFavorite': isFavorite,
+    });
   }
 
   Product copyWith({

@@ -34,8 +34,21 @@ class UserProductItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    onPressed: () {
-                      productsProvider.remove(byId: id);
+                    onPressed: () async {
+                      try {
+                        final resp = await productsProvider.delete(byId: id);
+                      } catch (e) {
+                        debugPrint('e: $e');
+                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          // backgroundColor: Colors.blueGrey,
+                          content: Text(
+                            e.toString(),
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ));
+                        rethrow;
+                      }
                     },
                     icon: Icon(
                       CupertinoIcons.delete,

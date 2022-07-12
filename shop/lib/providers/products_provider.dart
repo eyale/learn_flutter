@@ -1,42 +1,14 @@
+import 'dart:convert' as convert;
+
 import 'package:flutter/material.dart';
+import '../models/http_exception.dart';
 
 import 'product.dart';
 
+import '../misc/Api.dart';
+
 class Products with ChangeNotifier {
-  final List<Product> _items = [
-    Product(
-      id: 'p1',
-      title: 'Red Shirt',
-      description: 'A red shirt - it is pretty red!',
-      price: 29.99,
-      imageUrl:
-          'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    ),
-    Product(
-      id: 'p2',
-      title: 'Trousers',
-      description: 'A nice pair of trousers.',
-      price: 59.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    ),
-    Product(
-      id: 'p3',
-      title: 'Yellow Scarf',
-      description: 'Warm and cozy - exactly what you need for the winter.',
-      price: 19.99,
-      imageUrl:
-          'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
-    ),
-    Product(
-      id: 'p4',
-      title: 'A Pan',
-      description: 'Prepare any meal you want.',
-      price: 49.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
-  ];
+  List<Product> _items = [];
 
   int get count {
     return _items.length;
@@ -54,24 +26,87 @@ class Products with ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
-  void add(Product product) {
-    final Product newProduct = product.copyWith(id: DateTime.now().toString());
+  Future get() async {
+    try {
+      var response = await Api.instance.get(path: 'products.json');
+      debugPrint('response: ${convert.jsonEncode(response.body)}');
+      final decodedData =
+          convert.jsonDecode(response.body) as Map<String, dynamic>;
 
-    _items.add(newProduct);
+      List<Product> loadedProducts = [];
 
-    notifyListeners();
-  }
+      decodedData.forEach((key, value) {
+        debugPrint('key,$key, value: $value');
 
-  void update({required String byId, required Product withNewProduct}) {
-    final productIndex = _items.indexWhere((element) => element.id == byId);
-    if (productIndex >= 0) {
-      _items[productIndex] = withNewProduct;
+        loadedProducts.add(Product(
+            id: key,
+            title: value['title'],
+            description: value['description'],
+            price: value['price'],
+            imageUrl: value['imageUrl']));
+      });
+      _items = loadedProducts;
       notifyListeners();
+    } catch (e) {
+      debugPrint('e: $e');
+      rethrow;
     }
   }
 
-  void remove({required String byId}) {
-    _items.removeWhere((element) => element.id == byId);
-    notifyListeners();
+  Future add(Product product) async {
+    final Product newProduct = product.copyWith(id: DateTime.now().toString());
+
+    try {
+      var response = await Api.instance
+          .post(path: 'products.json', jsonEncoded: newProduct.jsonEncode());
+      final id = convert.jsonDecode(response.body);
+      final Product copiedProduct = product.copyWith(id: id['name']);
+
+      _items.add(copiedProduct);
+
+      notifyListeners();
+    } catch (error) {
+      debugPrint('error: $error');
+      rethrow;
+    }
+  }
+
+  Future update({required String byId, required Product withNewProduct}) async {
+    final productIndex = _items.indexWhere((element) => element.id == byId);
+
+    try {
+      var response = await Api.instance.edit(
+          path: 'products/$byId.json',
+          jsonEncoded: withNewProduct.jsonEncode());
+
+      if (response.statusCode == 200) {
+        if (productIndex >= 0) {
+          _items[productIndex] = withNewProduct;
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      debugPrint('e: $e');
+      rethrow;
+    }
+  }
+
+  Future delete({required String byId}) async {
+    try {
+      var response = await Api.instance.delete(path: 'products/$byId.json');
+      final indexOfDeletingProduct =
+          _items.indexWhere((element) => element.id == byId);
+      final deletingProduct = _items[indexOfDeletingProduct];
+      _items.removeWhere((element) => element.id == byId);
+
+      if (response.statusCode >= 400) {
+        _items.insert(indexOfDeletingProduct, deletingProduct);
+        notifyListeners();
+        throw HttpException('Error while trying delete product');
+      }
+    } catch (e) {
+      debugPrint('e: $e');
+      rethrow;
+    }
   }
 }
