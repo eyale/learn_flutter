@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/providers/auth_provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import './providers/cart.dart';
 import './providers/order.dart';
@@ -13,7 +14,8 @@ import './screens/products_overview.dart';
 import './screens/user_products.dart';
 import './screens/auth.dart';
 
-void main() {
+Future main() async {
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
@@ -42,7 +44,6 @@ class MyApp extends StatelessWidget {
           },
         ),
         ChangeNotifierProvider(create: (_) => Cart()),
-        // ChangeNotifierProvider(create: (_) => Order()),
       ],
       child: Consumer<Auth>(
         builder: (context, auth, _) {

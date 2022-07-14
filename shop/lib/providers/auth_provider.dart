@@ -1,5 +1,6 @@
 import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../models/http_exception.dart';
 
@@ -34,8 +35,10 @@ class Auth with ChangeNotifier {
     required String path,
   }) async {
     const url = 'identitytoolkit.googleapis.com';
-    const params = {
-      'key': 'AIzaSyDIJXVIyfJP8BvTGmF0nCtAY5-Aapbz5Es',
+    final firKey = dotenv.env['FIR_KEY'];
+
+    final params = {
+      'key': firKey,
     };
     final encodedBody = convert.jsonEncode({
       'email': email,
