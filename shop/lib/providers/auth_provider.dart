@@ -5,7 +5,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/http_exception.dart';
 
 import '../misc/Api.dart';
-import '../misc/Api.dart';
 
 class Auth with ChangeNotifier {
   String? _token;
@@ -55,17 +54,24 @@ class Auth with ChangeNotifier {
         params: params,
       );
       Map<String, dynamic> decodedResp = convert.jsonDecode(resp.body);
-      debugPrint('decodedResp: $decodedResp');
+      debugPrint('\n\nAUTH\n: $decodedResp');
 
       if (decodedResp['error'] != null) {
-        debugPrint('error: ${decodedResp['error']}');
+        debugPrint('AUTH error: ${decodedResp['error']}');
 
         throw HttpException(decodedResp['error']['message']);
       }
 
-      debugPrint('\n\ndecodedResp[idToken]: ${decodedResp['idToken']}');
-      _token = decodedResp['idToken'];
-      Api.instance.auth = decodedResp['idToken'];
+      if (decodedResp['localId'] != null) {
+        _userId = decodedResp['localId'];
+        Api.instance.userId = decodedResp['localId'];
+      }
+
+      if (decodedResp['idToken'] != null) {
+        Api.instance.token = decodedResp['idToken'];
+        _token = decodedResp['idToken'];
+      }
+
       // _expiryDate = DateTime.now().add(
       //   Duration(seconds: int.parse(decodedResp['expiresIn'])),
       // );
@@ -73,7 +79,7 @@ class Auth with ChangeNotifier {
       // _refreshToken = decodedResp['refreshToken'];
       notifyListeners();
     } catch (e) {
-      debugPrint('authenticate e: $e');
+      debugPrint('AUTH e: $e');
       rethrow;
     }
   }

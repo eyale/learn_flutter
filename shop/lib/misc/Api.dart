@@ -1,19 +1,25 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 const String firebaseURL =
     'flutter-shop-2c434-default-rtdb.europe-west1.firebasedatabase.app';
 
 class Api {
-  Api._privateConstructor({required this.auth});
-  static final Api instance = Api._privateConstructor(auth: '');
+  Api._privateConstructor({
+    this.token,
+    this.userId,
+  });
+  static final Api instance =
+      Api._privateConstructor(token: null, userId: null);
 
-  String auth;
+  String? token;
+  String? userId;
   Future delete({
     String url = firebaseURL,
     required String path,
   }) async {
     Map<String, dynamic>? params = {
-      'auth': auth,
+      'auth': token,
     };
     final uri = Uri.https(url, path, params);
     return await http.delete(uri);
@@ -25,7 +31,7 @@ class Api {
     required String jsonEncoded,
   }) async {
     Map<String, dynamic>? params = {
-      'auth': auth,
+      'auth': token,
     };
 
     var uri = Uri.https(url, path, params);
@@ -37,7 +43,7 @@ class Api {
     required String path,
   }) async {
     Map<String, dynamic>? params = {
-      'auth': auth,
+      'auth': token,
     };
 
     var uri = Uri.https(url, path, params);
@@ -51,14 +57,16 @@ class Api {
     required String encodedBody,
     Map<String, dynamic>? params,
   }) async {
+    debugPrint('params: $params');
     Map<String, dynamic>? authParams = {
-      'auth': auth,
+      'auth': token,
     };
 
     if (params != null) {
       authParams.addAll(params);
     }
-    var uri = Uri.https(url, path, params);
+
+    var uri = Uri.https(url, path, authParams);
 
     return await http.post(uri, body: encodedBody);
   }

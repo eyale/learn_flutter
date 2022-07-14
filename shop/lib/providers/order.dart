@@ -51,16 +51,12 @@ class Order with ChangeNotifier {
     try {
       final resp = await Api.instance.get(path: 'orders.json');
 
-      debugPrint('\n\nresp.body: ${resp.body}');
       if (resp.body == 'null') return;
 
       final decodedBody = convert.jsonDecode(resp.body) as Map<String, dynamic>;
       List<OrderItem> loadedOrders = [];
 
       decodedBody.forEach((key, value) {
-        debugPrint('key: $key');
-        debugPrint('value: $value');
-
         loadedOrders.add(
           OrderItem(
             id: key,
@@ -80,7 +76,7 @@ class Order with ChangeNotifier {
       localOrders = loadedOrders.reversed.toList();
       notifyListeners();
     } catch (e) {
-      debugPrint('e: $e');
+      debugPrint('orders get e: $e');
       rethrow;
     }
   }

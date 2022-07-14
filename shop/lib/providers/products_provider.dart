@@ -34,26 +34,40 @@ class Products with ChangeNotifier {
 
   Future get() async {
     try {
-      Map<String, dynamic> params = {'auth': authToken};
-      debugPrint('params: $params');
+      final productsResp = await Api.instance.get(path: 'products.json');
 
-      final response = await Api.instance.get(path: 'products.json');
+      if (productsResp.body == 'null') return;
+      debugPrint('productsResp.body: ${productsResp.body}');
 
-      if (response.body == 'null') return;
+      final decodedProductsBody =
+          convert.jsonDecode(productsResp.body) as Map<String, dynamic>;
 
-      final decodedBody =
-          convert.jsonDecode(response.body) as Map<String, dynamic>;
+      final favoritesResp = await Api.instance
+          .get(path: 'usersFavorites/${Api.instance.userId}.json');
+
+      Map<String, dynamic>? decodedFavoritesBody;
+      if (favoritesResp.body != 'null') {
+        decodedFavoritesBody =
+            convert.jsonDecode(favoritesResp.body) as Map<String, dynamic>;
+        debugPrint('decodedFavoritesBody: $decodedFavoritesBody');
+      }
 
       List<Product> loadedProducts = [];
 
-      decodedBody.forEach((key, value) {
+      decodedProductsBody.forEach((key, value) {
+        final String productId = key;
+        bool isProductFavorite = false;
+        isProductFavorite = favoritesResp == null
+            ? false
+            : decodedFavoritesBody?[productId] ?? false;
+
         loadedProducts.add(Product(
           id: key,
           title: value['title'],
           description: value['description'],
           price: value['price'],
           imageUrl: value['imageUrl'],
-          isFavorite: value['isFavorite'],
+          isFavorite: isProductFavorite,
         ));
       });
       localItems = loadedProducts;
@@ -65,14 +79,23 @@ class Products with ChangeNotifier {
   }
 
   Future add(Product product) async {
-    final Product newProduct = product.copyWith(id: DateTime.now().toString());
+    final Product newProduct = product.copyWith(
+      id: DateTime.now().toString(),
+      creatorId: Api.instance.userId,
+    );
+    debugPrint('newProduct: ${newProduct.creatorId}');
 
     try {
       final response = await Api.instance
           .post(path: 'products.json', encodedBody: newProduct.jsonEncode());
-      final id = convert.jsonDecode(response.body);
-      final Product copiedProduct = product.copyWith(id: id['name']);
+      if (response.statusCode >= 400) {
+        // print(decodedResp.body);
+        // print(decodedResp.statusCode);
+        // throw HttpException(decodedResp.message);
+      }
+      final decodedResp = convert.jsonDecode(response.body);
 
+      final Product copiedProduct = product.copyWith(id: decodedResp['name']);
       localItems.add(copiedProduct);
 
       notifyListeners();

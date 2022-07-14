@@ -12,6 +12,7 @@ class Product with ChangeNotifier {
   final double price;
   final String imageUrl;
   bool isFavorite;
+  String? creatorId;
 
   Product({
     required this.id,
@@ -20,6 +21,7 @@ class Product with ChangeNotifier {
     required this.price,
     required this.imageUrl,
     required this.isFavorite,
+    this.creatorId,
   });
 
   Future toggleIsFavorite() async {
@@ -27,8 +29,10 @@ class Product with ChangeNotifier {
     isFavorite = !isFavorite;
     notifyListeners();
     try {
-      final resp = await Api.instance
-          .update(path: 'products/$id.json', jsonEncoded: jsonEncode());
+      debugPrint('toggleIsFavorite Productid: $id');
+      final resp = await Api.instance.update(
+          path: 'usersFavorites/${Api.instance.userId}.json',
+          jsonEncoded: convert.jsonEncode({id: isFavorite}));
 
       if (resp.statusCode >= 400) {
         isFavorite = prevStatusIsFavorite;
@@ -37,7 +41,7 @@ class Product with ChangeNotifier {
 
       notifyListeners();
     } catch (e) {
-      debugPrint('e: $e');
+      debugPrint('toggleIsFavorite e: $e');
       rethrow;
     }
   }
@@ -49,7 +53,7 @@ class Product with ChangeNotifier {
       'description': description,
       'price': price,
       'imageUrl': imageUrl,
-      'isFavorite': isFavorite,
+      'creatorId': creatorId,
     });
   }
 
@@ -60,6 +64,7 @@ class Product with ChangeNotifier {
     double? price,
     String? imageUrl,
     bool? isFavorite,
+    String? creatorId,
   }) =>
       Product(
         id: id ?? this.id,
@@ -68,5 +73,6 @@ class Product with ChangeNotifier {
         price: price ?? this.price,
         imageUrl: imageUrl ?? this.imageUrl,
         isFavorite: isFavorite ?? this.isFavorite,
+        creatorId: creatorId ?? this.creatorId,
       );
 }
