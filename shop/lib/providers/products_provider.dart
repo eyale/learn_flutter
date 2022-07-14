@@ -7,28 +7,38 @@ import 'product.dart';
 
 import '../misc/Api.dart';
 
+const List<Product> emptyList = [];
+
 class Products with ChangeNotifier {
-  List<Product> _items = [];
+  List<Product> localItems = [];
+
+  String? authToken;
+
+  Products({this.authToken, this.localItems = emptyList});
 
   int get count {
-    return _items.length;
+    return localItems.length;
   }
 
   List<Product> get items {
-    return _items.toList();
+    return localItems.toList();
   }
 
   List<Product> get filteredItems {
-    return _items.where((element) => element.isFavorite == true).toList();
+    return localItems.where((element) => element.isFavorite == true).toList();
   }
 
   Product getBy({required String id}) {
-    return _items.firstWhere((element) => element.id == id);
+    return localItems.firstWhere((element) => element.id == id);
   }
 
   Future get() async {
     try {
-      final response = await Api.instance.get(path: 'products.json');
+      Map<String, dynamic> params = {'auth': authToken};
+      debugPrint('params: $params');
+
+      final response =
+          await Api.instance.get(path: 'products.json', params: params);
 
       if (response.body == 'null') return;
 
@@ -47,10 +57,10 @@ class Products with ChangeNotifier {
           isFavorite: value['isFavorite'],
         ));
       });
-      _items = loadedProducts;
+      localItems = loadedProducts;
       notifyListeners();
     } catch (e) {
-      debugPrint('e: $e');
+      debugPrint('get error: $e');
       rethrow;
     }
   }
@@ -60,21 +70,21 @@ class Products with ChangeNotifier {
 
     try {
       final response = await Api.instance
-          .post(path: 'products.json', jsonEncoded: newProduct.jsonEncode());
+          .post(path: 'products.json', encodedBody: newProduct.jsonEncode());
       final id = convert.jsonDecode(response.body);
       final Product copiedProduct = product.copyWith(id: id['name']);
 
-      _items.add(copiedProduct);
+      localItems.add(copiedProduct);
 
       notifyListeners();
     } catch (error) {
-      debugPrint('error: $error');
+      debugPrint('add error: $error');
       rethrow;
     }
   }
 
   Future update({required String byId, required Product withNewProduct}) async {
-    final productIndex = _items.indexWhere((element) => element.id == byId);
+    final productIndex = localItems.indexWhere((element) => element.id == byId);
 
     try {
       var response = await Api.instance.update(
@@ -83,12 +93,12 @@ class Products with ChangeNotifier {
 
       if (response.statusCode == 200) {
         if (productIndex >= 0) {
-          _items[productIndex] = withNewProduct;
+          localItems[productIndex] = withNewProduct;
           notifyListeners();
         }
       }
     } catch (e) {
-      debugPrint('e: $e');
+      debugPrint('update error: $e');
       rethrow;
     }
   }
@@ -97,17 +107,17 @@ class Products with ChangeNotifier {
     try {
       final response = await Api.instance.delete(path: 'products/$byId.json');
       final indexOfDeletingProduct =
-          _items.indexWhere((element) => element.id == byId);
-      final deletingProduct = _items[indexOfDeletingProduct];
-      _items.removeWhere((element) => element.id == byId);
+          localItems.indexWhere((element) => element.id == byId);
+      final deletingProduct = localItems[indexOfDeletingProduct];
+      localItems.removeWhere((element) => element.id == byId);
 
       if (response.statusCode >= 400) {
-        _items.insert(indexOfDeletingProduct, deletingProduct);
+        localItems.insert(indexOfDeletingProduct, deletingProduct);
         throw HttpException('Error while trying delete product');
       }
       notifyListeners();
     } catch (e) {
-      debugPrint('e: $e');
+      debugPrint('delete error: $e');
       rethrow;
     }
   }

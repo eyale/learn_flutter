@@ -27,8 +27,9 @@ class Api {
   Future get({
     String url = firebaseURL,
     required String path,
+    Map<String, dynamic>? params,
   }) async {
-    var uri = Uri.https(url, path);
+    var uri = Uri.https(url, path, params);
 
     return await http.get(uri);
   }
@@ -36,10 +37,11 @@ class Api {
   Future post({
     String url = firebaseURL,
     required String path,
-    required String jsonEncoded,
+    required String encodedBody,
+    Map<String, dynamic>? params,
   }) async {
-    var uri = Uri.https(url, path);
+    var uri = Uri.https(url, path, params);
 
-    return await http.post(uri, body: jsonEncoded);
+    return await http.post(uri, body: encodedBody);
   }
 }

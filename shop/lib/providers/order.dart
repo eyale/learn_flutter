@@ -32,27 +32,38 @@ class OrderItem {
       );
 }
 
+const List<OrderItem> emptyList = [];
+
 class Order with ChangeNotifier {
-  List<OrderItem> _orders = [];
+  List<OrderItem> localOrders = [];
+
+  String? authToken;
+
+  Order({this.authToken, this.localOrders = emptyList});
 
   List<OrderItem> get orders {
-    return [..._orders];
+    return [...localOrders];
   }
 
   int get count {
-    return _orders.length;
+    return localOrders.length;
   }
 
   Future get() async {
     try {
-      final resp = await Api.instance.get(path: 'orders.json');
+      Map<String, dynamic> params = {'auth': authToken};
+      final resp = await Api.instance.get(path: 'orders.json', params: params);
 
+      debugPrint('\n\nresp.body: ${resp.body}');
       if (resp.body == 'null') return;
 
       final decodedBody = convert.jsonDecode(resp.body) as Map<String, dynamic>;
       List<OrderItem> loadedOrders = [];
 
       decodedBody.forEach((key, value) {
+        debugPrint('key: $key');
+        debugPrint('value: $value');
+
         loadedOrders.add(
           OrderItem(
             id: key,
@@ -69,7 +80,7 @@ class Order with ChangeNotifier {
         );
       });
 
-      _orders = loadedOrders.reversed.toList();
+      localOrders = loadedOrders.reversed.toList();
       notifyListeners();
     } catch (e) {
       debugPrint('e: $e');
@@ -81,6 +92,7 @@ class Order with ChangeNotifier {
     required List<CartItem> products,
     required double totalAmount,
   }) async {
+    Map<String, dynamic> params = {'auth': authToken};
     final orderItem = OrderItem(
       id: DateTime.now().toString(),
       amount: totalAmount,
@@ -101,10 +113,10 @@ class Order with ChangeNotifier {
           .toList(),
     });
 
-    final resp = await Api.instance
-        .post(path: 'orders.json', jsonEncoded: orderItemEncoded);
+    final resp = await Api.instance.post(
+        path: 'orders.json', encodedBody: orderItemEncoded, params: params);
     final decodedId = convert.jsonDecode(resp.body);
-    _orders.insert(0, orderItem.copyWith(id: decodedId['name']));
+    localOrders.insert(0, orderItem.copyWith(id: decodedId['name']));
 
     notifyListeners();
   }
