@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/http_exception.dart';
 
 import '../misc/Api.dart';
+import '../misc/Api.dart';
 
 class Auth with ChangeNotifier {
   String? _token;
@@ -64,6 +65,7 @@ class Auth with ChangeNotifier {
 
       debugPrint('\n\ndecodedResp[idToken]: ${decodedResp['idToken']}');
       _token = decodedResp['idToken'];
+      Api.instance.auth = decodedResp['idToken'];
       // _expiryDate = DateTime.now().add(
       //   Duration(seconds: int.parse(decodedResp['expiresIn'])),
       // );

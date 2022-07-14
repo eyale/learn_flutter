@@ -35,14 +35,15 @@ class MyApp extends StatelessWidget {
                 localItems: prevStateProducts!.items,
               );
             }),
-        ChangeNotifierProxyProvider<Auth, Order>(
-          create: (_) => Order(),
-          update: (ctx, authData, prevStateOrders) {
-            return Order(
-                authToken: authData.token,
-                localOrders: prevStateOrders!.orders);
-          },
-        ),
+        // ChangeNotifierProxyProvider<Auth, Order>(
+        //   create: (_) => Order(),
+        //   update: (ctx, authData, prevStateOrders) {
+        //     return Order(
+        //         authToken: authData.token,
+        //         localOrders: prevStateOrders!.orders);
+        //   },
+        // ),
+        ChangeNotifierProvider(create: (_) => Order()),
         ChangeNotifierProvider(create: (_) => Cart()),
       ],
       child: Consumer<Auth>(

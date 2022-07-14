@@ -37,8 +37,7 @@ class Products with ChangeNotifier {
       Map<String, dynamic> params = {'auth': authToken};
       debugPrint('params: $params');
 
-      final response =
-          await Api.instance.get(path: 'products.json', params: params);
+      final response = await Api.instance.get(path: 'products.json');
 
       if (response.body == 'null') return;
 

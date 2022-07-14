@@ -32,19 +32,19 @@ class ProductDetailsScreen extends StatelessWidget {
               width: double.infinity,
               fit: BoxFit.cover,
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 40),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
                 '\$${product.price}',
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 20,
+                    fontSize: 22,
                     color: Theme.of(context).colorScheme.secondary),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: SizedBox(
                 width: double.infinity,
                 child: Text(
@@ -52,7 +52,7 @@ class ProductDetailsScreen extends StatelessWidget {
                   softWrap: true,
                   textAlign: TextAlign.start,
                   style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       color: Theme.of(context).colorScheme.primary),
                 ),
               ),

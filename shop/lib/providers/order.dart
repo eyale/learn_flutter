@@ -37,9 +37,7 @@ const List<OrderItem> emptyList = [];
 class Order with ChangeNotifier {
   List<OrderItem> localOrders = [];
 
-  String? authToken;
-
-  Order({this.authToken, this.localOrders = emptyList});
+  Order({this.localOrders = emptyList});
 
   List<OrderItem> get orders {
     return [...localOrders];
@@ -51,8 +49,7 @@ class Order with ChangeNotifier {
 
   Future get() async {
     try {
-      Map<String, dynamic> params = {'auth': authToken};
-      final resp = await Api.instance.get(path: 'orders.json', params: params);
+      final resp = await Api.instance.get(path: 'orders.json');
 
       debugPrint('\n\nresp.body: ${resp.body}');
       if (resp.body == 'null') return;
@@ -92,7 +89,6 @@ class Order with ChangeNotifier {
     required List<CartItem> products,
     required double totalAmount,
   }) async {
-    Map<String, dynamic> params = {'auth': authToken};
     final orderItem = OrderItem(
       id: DateTime.now().toString(),
       amount: totalAmount,
@@ -113,8 +109,8 @@ class Order with ChangeNotifier {
           .toList(),
     });
 
-    final resp = await Api.instance.post(
-        path: 'orders.json', encodedBody: orderItemEncoded, params: params);
+    final resp = await Api.instance
+        .post(path: 'orders.json', encodedBody: orderItemEncoded);
     final decodedId = convert.jsonDecode(resp.body);
     localOrders.insert(0, orderItem.copyWith(id: decodedId['name']));
 

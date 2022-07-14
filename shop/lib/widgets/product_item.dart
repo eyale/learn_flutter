@@ -23,9 +23,10 @@ class ProductItem extends StatelessWidget {
       borderRadius: const BorderRadius.all(Radius.circular(10)),
       child: GridTile(
         footer: GridTileBar(
-          backgroundColor: Colors.black87,
+          backgroundColor: Colors.black54,
           leading: Consumer<Product>(
             builder: (context, item, child) => IconButton(
+              iconSize: 18,
               icon: Icon(item.isFavorite
                   ? CupertinoIcons.heart_fill
                   : CupertinoIcons.heart),
@@ -43,6 +44,7 @@ class ProductItem extends StatelessWidget {
             ),
           ),
           trailing: IconButton(
+            iconSize: 18,
             icon: Icon(cart.items.containsKey(product.id)
                 ? CupertinoIcons.cart_fill
                 : CupertinoIcons.shopping_cart),
@@ -67,9 +69,7 @@ class ProductItem extends StatelessWidget {
             },
           ),
           title: FittedBox(
-            child: Text(
-              product.title,
-            ),
+            child: Text(product.title),
           ),
         ),
         child: GestureDetector(

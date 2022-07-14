@@ -4,14 +4,18 @@ const String firebaseURL =
     'flutter-shop-2c434-default-rtdb.europe-west1.firebasedatabase.app';
 
 class Api {
-  Api._privateConstructor();
-  static final Api instance = Api._privateConstructor();
+  Api._privateConstructor({required this.auth});
+  static final Api instance = Api._privateConstructor(auth: '');
 
+  String auth;
   Future delete({
     String url = firebaseURL,
     required String path,
   }) async {
-    final uri = Uri.https(url, path);
+    Map<String, dynamic>? params = {
+      'auth': auth,
+    };
+    final uri = Uri.https(url, path, params);
     return await http.delete(uri);
   }
 
@@ -20,15 +24,22 @@ class Api {
     required String path,
     required String jsonEncoded,
   }) async {
-    var uri = Uri.https(url, path);
+    Map<String, dynamic>? params = {
+      'auth': auth,
+    };
+
+    var uri = Uri.https(url, path, params);
     return await http.patch(uri, body: jsonEncoded);
   }
 
   Future get({
     String url = firebaseURL,
     required String path,
-    Map<String, dynamic>? params,
   }) async {
+    Map<String, dynamic>? params = {
+      'auth': auth,
+    };
+
     var uri = Uri.https(url, path, params);
 
     return await http.get(uri);
@@ -40,6 +51,13 @@ class Api {
     required String encodedBody,
     Map<String, dynamic>? params,
   }) async {
+    Map<String, dynamic>? authParams = {
+      'auth': auth,
+    };
+
+    if (params != null) {
+      authParams.addAll(params);
+    }
     var uri = Uri.https(url, path, params);
 
     return await http.post(uri, body: encodedBody);
