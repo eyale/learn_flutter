@@ -49,7 +49,8 @@ class Order with ChangeNotifier {
 
   Future get() async {
     try {
-      final resp = await Api.instance.get(path: 'orders.json');
+      final resp =
+          await Api.instance.get(path: 'orders/${Api.instance.userId}.json');
 
       if (resp.body == 'null') return;
 
@@ -105,8 +106,9 @@ class Order with ChangeNotifier {
           .toList(),
     });
 
-    final resp = await Api.instance
-        .post(path: 'orders.json', encodedBody: orderItemEncoded);
+    final resp = await Api.instance.post(
+        path: 'orders/${Api.instance.userId}.json',
+        encodedBody: orderItemEncoded);
     final decodedId = convert.jsonDecode(resp.body);
     localOrders.insert(0, orderItem.copyWith(id: decodedId['name']));
 
