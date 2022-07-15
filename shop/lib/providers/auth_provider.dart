@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'dart:convert' as convert;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../models/http_exception.dart';
-
 import '../misc/Api.dart';
+import '../models/http_exception.dart';
 
 class Auth with ChangeNotifier {
   String? _token;
@@ -12,6 +13,8 @@ class Auth with ChangeNotifier {
   String? _userId;
   String? _refreshToken;
   String? _localId;
+
+  Timer? _timer;
 
   bool get isAuth {
     return token == null;
@@ -54,7 +57,7 @@ class Auth with ChangeNotifier {
         params: params,
       );
       Map<String, dynamic> decodedResp = convert.jsonDecode(resp.body);
-      debugPrint('\n\nAUTH\n: $decodedResp');
+      debugPrint('\nAUTH\n: $decodedResp');
 
       if (decodedResp['error'] != null) {
         debugPrint('AUTH error: ${decodedResp['error']}');
@@ -72,16 +75,48 @@ class Auth with ChangeNotifier {
         _token = decodedResp['idToken'];
       }
 
-      // _expiryDate = DateTime.now().add(
-      //   Duration(seconds: int.parse(decodedResp['expiresIn'])),
-      // );
+      if (decodedResp['expiresIn'] != null) {
+        _expiryDate = DateTime.now().add(
+          Duration(seconds: int.parse(decodedResp['expiresIn'])),
+        );
+      }
+
       _localId = decodedResp['localId'];
       // _refreshToken = decodedResp['refreshToken'];
+
+      autoLogout();
       notifyListeners();
     } catch (e) {
       debugPrint('AUTH e: $e');
       rethrow;
     }
+  }
+
+  void autoLogout() {
+    if (_expiryDate == null) return;
+    if (_timer != null) {
+      _timer?.cancel();
+    }
+    final expirationTokenTime =
+        _expiryDate!.difference(DateTime.now()).inSeconds;
+
+    _timer = Timer.periodic(Duration(seconds: expirationTokenTime), (timer) {
+      logout();
+    });
+  }
+
+  Future logout() async {
+    _token = null;
+    Api.instance.token = null;
+    _userId = null;
+    Api.instance.userId = null;
+
+    if (_timer != null) {
+      _timer?.cancel();
+      _timer = null;
+    }
+
+    notifyListeners();
   }
 
   Future login({

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 const String firebaseURL =
@@ -46,8 +45,6 @@ class Api {
     Map<String, dynamic>? authParams = {
       'auth': token,
     };
-
-    debugPrint('params: $params');
     if (params != null) {
       authParams.addAll(params);
     }
@@ -63,7 +60,6 @@ class Api {
     required String encodedBody,
     Map<String, dynamic>? params,
   }) async {
-    debugPrint('params: $params');
     Map<String, dynamic>? authParams = {
       'auth': '$token',
     };

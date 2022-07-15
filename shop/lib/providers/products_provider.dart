@@ -44,7 +44,6 @@ class Products with ChangeNotifier {
           await Api.instance.get(path: 'products.json', params: getParams);
 
       if (productsResp.body == 'null') return;
-      debugPrint('productsResp.body: ${productsResp.body}');
 
       final decodedProductsBody =
           convert.jsonDecode(productsResp.body) as Map<String, dynamic>;

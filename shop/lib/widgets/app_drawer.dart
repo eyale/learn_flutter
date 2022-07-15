@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/auth_provider.dart';
 import '../screens/orders.dart';
 import '../screens/user_products.dart';
 
@@ -29,7 +31,7 @@ class AppDrawer extends StatelessWidget {
                     shadows: [
                       Shadow(
                           color: Theme.of(context).colorScheme.primary,
-                          offset: Offset(2, 2))
+                          offset: const Offset(2, 2))
                     ]),
               ),
             ),
@@ -63,6 +65,17 @@ class AppDrawer extends StatelessWidget {
               onTap: () {
                 Navigator.of(context)
                     .pushReplacementNamed(UserProductsScreen.routeName);
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+            child: ListTile(
+              leading: const Icon(CupertinoIcons.arrow_right_circle_fill),
+              title: const Text('Logout'),
+              onTap: () {
+                Provider.of<Auth>(context, listen: false).logout().then(
+                    (value) => Navigator.of(context).pushReplacementNamed('/'));
               },
             ),
           ),

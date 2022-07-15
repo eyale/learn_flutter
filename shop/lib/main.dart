@@ -27,6 +27,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => Auth()),
+        // Below: is just an example
+        // how to pass data from One Provider to Another
         ChangeNotifierProxyProvider<Auth, Products>(
             create: (_) => Products(),
             update: (ctx, authData, prevStateProducts) {
@@ -35,14 +37,6 @@ class MyApp extends StatelessWidget {
                 localItems: prevStateProducts!.items,
               );
             }),
-        // ChangeNotifierProxyProvider<Auth, Order>(
-        //   create: (_) => Order(),
-        //   update: (ctx, authData, prevStateOrders) {
-        //     return Order(
-        //         authToken: authData.token,
-        //         localOrders: prevStateOrders!.orders);
-        //   },
-        // ),
         ChangeNotifierProvider(create: (_) => Order()),
         ChangeNotifierProvider(create: (_) => Cart()),
       ],

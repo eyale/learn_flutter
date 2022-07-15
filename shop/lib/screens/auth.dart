@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/http_exception.dart';
 import '../providers/auth_provider.dart';
@@ -241,7 +241,7 @@ class _AuthCardState extends State<AuthCard> {
                       return null;
                     },
                     onSaved: (value) {
-                      _authData['email'] = value!;
+                      _authData['email'] = value!.trim();
                     },
                   ),
                   TextFormField(
@@ -264,7 +264,7 @@ class _AuthCardState extends State<AuthCard> {
                       return null;
                     },
                     onSaved: (value) {
-                      _authData['password'] = value!;
+                      _authData['password'] = value!.trim();
                     },
                   ),
                   if (_authMode == AuthMode.Signup)
