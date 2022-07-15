@@ -41,12 +41,18 @@ class Api {
   Future get({
     String url = firebaseURL,
     required String path,
+    Map<String, dynamic>? params,
   }) async {
-    Map<String, dynamic>? params = {
+    Map<String, dynamic>? authParams = {
       'auth': token,
     };
 
-    var uri = Uri.https(url, path, params);
+    debugPrint('params: $params');
+    if (params != null) {
+      authParams.addAll(params);
+    }
+
+    var uri = Uri.https(url, path, authParams);
 
     return await http.get(uri);
   }
@@ -59,7 +65,7 @@ class Api {
   }) async {
     debugPrint('params: $params');
     Map<String, dynamic>? authParams = {
-      'auth': token,
+      'auth': '$token',
     };
 
     if (params != null) {

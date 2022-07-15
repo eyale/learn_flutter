@@ -71,9 +71,6 @@ class Cart with ChangeNotifier {
   }
 
   void addCartItem({required Product product}) {
-    _items.forEach((key, value) {
-      print(value.quantity);
-    });
     if (_items.containsKey(product.id)) {
       _items.update(
           product.id,

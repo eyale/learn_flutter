@@ -42,16 +42,18 @@ class _OrdersScreenState extends State<OrdersScreen> {
             if (snapshot.error != null) {
               return Center(child: Text(snapshot.error.toString()));
             }
-            return Consumer<Order>(builder: (context, item, child) {
-              return ListView.builder(
-                itemCount: item.count,
-                itemBuilder: (context, index) {
-                  return OrderListItem(
-                    order: item.orders[index],
-                  );
-                },
-              );
-            });
+            return Consumer<Order>(
+              builder: (context, item, child) {
+                return ListView.builder(
+                  itemCount: item.count,
+                  itemBuilder: (context, index) {
+                    return OrderListItem(
+                      order: item.orders[index],
+                    );
+                  },
+                );
+              },
+            );
           }),
     );
   }

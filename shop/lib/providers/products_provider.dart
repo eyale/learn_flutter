@@ -32,9 +32,16 @@ class Products with ChangeNotifier {
     return localItems.firstWhere((element) => element.id == id);
   }
 
-  Future get() async {
+  Future get({bool withFilterByUser = false}) async {
     try {
-      final productsResp = await Api.instance.get(path: 'products.json');
+      final getParams = withFilterByUser
+          ? {
+              'orderBy': convert.jsonEncode('creatorId'),
+              'equalTo': convert.jsonEncode(Api.instance.userId),
+            }
+          : null;
+      final productsResp =
+          await Api.instance.get(path: 'products.json', params: getParams);
 
       if (productsResp.body == 'null') return;
       debugPrint('productsResp.body: ${productsResp.body}');

@@ -16,53 +16,63 @@ class UserProductsScreen extends StatefulWidget {
 }
 
 class _UserProductsScreenState extends State<UserProductsScreen> {
+  Future _getProducts(BuildContext context) async {
+    await Provider.of<Products>(context, listen: false)
+        .get(withFilterByUser: true);
+  }
+
   @override
   Widget build(BuildContext context) {
-    bool isLoading = false;
-    final products = Provider.of<Products>(context);
-
-    void toggleIsLoadingState() {
-      setState(() {
-        isLoading = !isLoading;
-      });
-    }
-
-    Future getProducts() {
-      toggleIsLoadingState();
-      return products.get().then((_) {
-        toggleIsLoadingState();
-      });
-    }
+    // final productsProvider = Provider.of<Products>(context, listen: false);
 
     return Scaffold(
-      drawer: const AppDrawer(),
-      appBar: AppBar(
-        title: const Text('User products'),
-        actions: [
-          IconButton(
-            icon: const Icon(CupertinoIcons.plus),
-            onPressed: () {
-              Navigator.of(context).pushNamed(EditProductsScreen.routeName);
-            },
-          )
-        ],
-      ),
-      body: RefreshIndicator(
-        onRefresh: getProducts,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          child: ListView.builder(
-            itemCount: products.count,
-            itemBuilder: (context, index) {
-              return UserProductItem(
-                id: products.items[index].id,
-                title: products.items[index].title,
-                imageUrl: products.items[index].imageUrl,
-              );
-            },
-          ),
+        drawer: const AppDrawer(),
+        appBar: AppBar(
+          title: const Text('User products'),
+          actions: [
+            IconButton(
+              icon: const Icon(CupertinoIcons.plus),
+              onPressed: () {
+                Navigator.of(context).pushNamed(EditProductsScreen.routeName);
+              },
+            )
+          ],
         ),
-      ),
-    );
+        body: FutureBuilder(
+            future: _getProducts(context),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.error != null) {
+                debugPrint('snapshot.error: ${snapshot.error}');
+                return const Center(
+                  child: Text('Ooops... something went wrong 🤷'),
+                );
+              }
+              return RefreshIndicator(
+                onRefresh: () => _getProducts(context),
+                child: Consumer<Products>(
+                  builder: (context, products, child) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 20),
+                      child: ListView.builder(
+                        itemCount: products.count,
+                        itemBuilder: (context, index) {
+                          return UserProductItem(
+                            id: products.items[index].id,
+                            title: products.items[index].title,
+                            imageUrl: products.items[index].imageUrl,
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
+              );
+            }));
   }
 }
