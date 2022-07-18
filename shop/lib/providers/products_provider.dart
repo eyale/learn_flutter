@@ -1,11 +1,10 @@
 import 'dart:convert' as convert;
 
 import 'package:flutter/material.dart';
-import '../models/http_exception.dart';
-
-import 'product.dart';
 
 import '../misc/Api.dart';
+import '../models/http_exception.dart';
+import 'product.dart';
 
 const List<Product> emptyList = [];
 
@@ -40,6 +39,7 @@ class Products with ChangeNotifier {
               'equalTo': convert.jsonEncode(Api.instance.userId),
             }
           : null;
+
       final productsResp =
           await Api.instance.get(path: 'products.json', params: getParams);
 
@@ -55,7 +55,6 @@ class Products with ChangeNotifier {
       if (favoritesResp.body != 'null') {
         decodedFavoritesBody =
             convert.jsonDecode(favoritesResp.body) as Map<String, dynamic>;
-        debugPrint('decodedFavoritesBody: $decodedFavoritesBody');
       }
 
       List<Product> loadedProducts = [];
@@ -76,6 +75,7 @@ class Products with ChangeNotifier {
           isFavorite: isProductFavorite,
         ));
       });
+
       localItems = loadedProducts;
       notifyListeners();
     } catch (e) {

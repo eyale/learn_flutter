@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/providers/auth_provider.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import './providers/cart.dart';
 import './providers/order.dart';
 import './providers/products_provider.dart';
+import './screens/auth.dart';
 import './screens/cart.dart';
 import './screens/edit_products.dart';
 import './screens/orders.dart';
 import './screens/product_details.dart';
 import './screens/products_overview.dart';
 import './screens/user_products.dart';
-import './screens/auth.dart';
+import './widgets/splash_screen.dart';
 
 Future main() async {
   await dotenv.load(fileName: ".env");
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
       ],
       child: Consumer<Auth>(
         builder: (context, auth, _) {
-          debugPrint('auth.isAuth: ${auth.isAuth}');
+          debugPrint('auth.isAuth: ${auth.isAuth}'.toUpperCase());
           return MaterialApp(
             title: 'Flutter Demo',
             debugShowCheckedModeBanner: false,
@@ -51,8 +52,17 @@ class MyApp extends StatelessWidget {
                     secondary: Colors.pinkAccent, primary: Colors.blueGrey),
                 fontFamily: 'Lato'),
             home: auth.isAuth
-                ? const AuthScreen()
-                : const ProductsOverviewScreen(),
+                ? const ProductsOverviewScreen()
+                : FutureBuilder(
+                    future: auth.autoLogin(),
+                    builder: (ctx, authResultSnapshot) {
+                      if (authResultSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return const SplashScreen();
+                      }
+                      return const AuthScreen();
+                    },
+                  ),
             routes: {
               AuthScreen.routeName: (_) => const AuthScreen(),
               ProductDetailsScreen.routeName: (_) =>
