@@ -200,7 +200,8 @@ class _AuthCardState extends State<AuthCard>
   }
 
   AnimationController? _animationController;
-  Animation<Size>? _heightAnimation;
+  Animation<Offset>? _slideAnimation;
+  Animation<double>? _opacityAnimation;
 
   @override
   void initState() {
@@ -209,10 +210,13 @@ class _AuthCardState extends State<AuthCard>
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 350));
 
-    _heightAnimation = Tween<Size>(
-      begin: const Size(double.infinity, 260),
-      end: const Size(double.infinity, 320),
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, -0.5),
+      end: const Offset(0, 0),
     ).animate(
+        CurvedAnimation(parent: _animationController!, curve: Curves.easeOut));
+
+    _opacityAnimation = Tween(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(parent: _animationController!, curve: Curves.easeOut));
   }
 
@@ -245,7 +249,7 @@ class _AuthCardState extends State<AuthCard>
         ),
         elevation: 8.0,
         child: AnimatedContainer(
-            duration: Duration(milliseconds: 350),
+            duration: const Duration(milliseconds: 350),
             curve: Curves.easeOut,
             height: _authMode == AuthMode.Signup ? 360 : 300,
             // height: _heightAnimation!.value.height,
@@ -298,21 +302,34 @@ class _AuthCardState extends State<AuthCard>
                           _authData['password'] = value!.trim();
                         },
                       ),
-                      if (_authMode == AuthMode.Signup)
-                        TextFormField(
-                          enabled: _authMode == AuthMode.Signup,
-                          decoration: const InputDecoration(
-                              labelText: 'Confirm Password'),
-                          obscureText: _isPasswordHidden,
-                          validator: _authMode == AuthMode.Signup
-                              ? (value) {
-                                  if (value != _passwordController.text) {
-                                    return 'Passwords do not match!';
-                                  }
-                                  return null;
-                                }
-                              : null,
+                      AnimatedContainer(
+                        curve: Curves.easeOut,
+                        constraints: BoxConstraints(
+                          minHeight: _authMode == AuthMode.Signup ? 60 : 0,
+                          maxHeight: _authMode == AuthMode.Signup ? 120 : 0,
                         ),
+                        duration: const Duration(milliseconds: 350),
+                        child: FadeTransition(
+                          opacity: _opacityAnimation!,
+                          child: SlideTransition(
+                            position: _slideAnimation!,
+                            child: TextFormField(
+                              enabled: _authMode == AuthMode.Signup,
+                              decoration: const InputDecoration(
+                                  labelText: 'Confirm Password'),
+                              obscureText: _isPasswordHidden,
+                              validator: _authMode == AuthMode.Signup
+                                  ? (value) {
+                                      if (value != _passwordController.text) {
+                                        return 'Passwords do not match!';
+                                      }
+                                      return null;
+                                    }
+                                  : null,
+                            ),
+                          ),
+                        ),
+                      ),
                       const SizedBox(
                         height: 20,
                       ),
