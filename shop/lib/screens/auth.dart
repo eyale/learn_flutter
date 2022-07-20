@@ -208,7 +208,7 @@ class _AuthCardState extends State<AuthCard>
     super.initState();
 
     _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 350));
+        vsync: this, duration: const Duration(milliseconds: 200));
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, -0.5),
@@ -249,7 +249,7 @@ class _AuthCardState extends State<AuthCard>
         ),
         elevation: 8.0,
         child: AnimatedContainer(
-            duration: const Duration(milliseconds: 350),
+            duration: const Duration(milliseconds: 250),
             curve: Curves.easeOut,
             height: _authMode == AuthMode.Signup ? 360 : 300,
             // height: _heightAnimation!.value.height,
@@ -308,7 +308,7 @@ class _AuthCardState extends State<AuthCard>
                           minHeight: _authMode == AuthMode.Signup ? 60 : 0,
                           maxHeight: _authMode == AuthMode.Signup ? 120 : 0,
                         ),
-                        duration: const Duration(milliseconds: 350),
+                        duration: const Duration(milliseconds: 250),
                         child: FadeTransition(
                           opacity: _opacityAnimation!,
                           child: SlideTransition(

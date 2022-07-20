@@ -12,64 +12,72 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          DrawerHeader(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/drawer_bg.jpeg'),
-                fit: BoxFit.cover,
+          Column(
+            children: [
+              DrawerHeader(
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/drawer_bg.jpeg'),
+                    opacity: 0.4,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    'Shop',
+                    style: TextStyle(
+                        fontSize: 38,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                        shadows: [
+                          Shadow(
+                              color: Colors.white, offset: const Offset(2, 2))
+                        ]),
+                  ),
+                ),
               ),
-            ),
-            child: Center(
-              child: Text(
-                'Shop',
-                style: TextStyle(
-                    fontSize: 38,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                          color: Theme.of(context).colorScheme.primary,
-                          offset: const Offset(2, 2))
-                    ]),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                child: ListTile(
+                  leading: const Icon(CupertinoIcons.bag_badge_plus),
+                  title: const Text('Shop'),
+                  onTap: () {
+                    Navigator.of(context).pushReplacementNamed('/');
+                  },
+                ),
               ),
-            ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                child: ListTile(
+                  leading: const Icon(CupertinoIcons.cart),
+                  title: const Text('Orders'),
+                  onTap: () {
+                    Navigator.of(context)
+                        .pushReplacementNamed(OrdersScreen.routeName);
+                  },
+                ),
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                child: ListTile(
+                  leading: const Icon(CupertinoIcons.pencil),
+                  title: const Text('Manage products'),
+                  onTap: () {
+                    Navigator.of(context)
+                        .pushReplacementNamed(UserProductsScreen.routeName);
+                  },
+                ),
+              ),
+            ],
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-            child: ListTile(
-              leading: const Icon(CupertinoIcons.bag_badge_plus),
-              title: const Text('Shop'),
-              onTap: () {
-                Navigator.of(context).pushReplacementNamed('/');
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-            child: ListTile(
-              leading: const Icon(CupertinoIcons.cart),
-              title: const Text('Orders'),
-              onTap: () {
-                Navigator.of(context)
-                    .pushReplacementNamed(OrdersScreen.routeName);
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-            child: ListTile(
-              leading: const Icon(CupertinoIcons.pencil),
-              title: const Text('Manage products'),
-              onTap: () {
-                Navigator.of(context)
-                    .pushReplacementNamed(UserProductsScreen.routeName);
-              },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
             child: ListTile(
               leading: const Icon(CupertinoIcons.arrow_right_circle_fill),
               title: const Text('Logout'),

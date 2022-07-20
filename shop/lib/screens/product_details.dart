@@ -26,13 +26,16 @@ class ProductDetailsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.network(
-              product.imageUrl,
-              height: 300,
-              width: double.infinity,
-              fit: BoxFit.cover,
+            Hero(
+              tag: product.id,
+              child: Image.network(
+                product.imageUrl,
+                height: 400,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(

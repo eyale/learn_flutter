@@ -19,6 +19,8 @@ class ProductItem extends StatelessWidget {
       ScaffoldMessenger.of(context).showSnackBar(sb);
     }
 
+    const placeholderImage = 'assets/images/product-placeholder.jpeg';
+
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(10)),
       child: GridTile(
@@ -73,9 +75,13 @@ class ProductItem extends StatelessWidget {
           ),
         ),
         child: GestureDetector(
-          child: Image.network(
-            product.imageUrl,
-            fit: BoxFit.cover,
+          child: Hero(
+            tag: product.id,
+            child: FadeInImage(
+              placeholder: const AssetImage(placeholderImage),
+              image: NetworkImage(product.imageUrl),
+              fit: BoxFit.cover,
+            ),
           ),
           onTap: () {
             Navigator.of(context).pushNamed(
