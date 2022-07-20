@@ -12,6 +12,8 @@ class ProductDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var _isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     final id = ModalRoute.of(context)?.settings.arguments as String;
     final product = Provider.of<Products>(
       context,
@@ -38,14 +40,17 @@ class ProductDetailsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            expandedHeight: 500,
+            expandedHeight: _isPortrait ? 500 : 200,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.all(0),
               title: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  width: double.infinity,
-                  color: Colors.black38,
-                  child: Text(product.title)),
+                padding: EdgeInsets.symmetric(
+                    horizontal: _isPortrait ? 50 : 100, vertical: 5),
+                width: double.infinity,
+                color: Colors.black38,
+                child: SafeArea(child: Text(product.title)),
+              ),
               background: Hero(
                 tag: product.id,
                 child: Image.network(
@@ -61,7 +66,8 @@ class ProductDetailsScreen extends StatelessWidget {
               [
                 const SizedBox(height: 20),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: _isPortrait ? 20 : 60),
                   child: Text(
                     '\$${product.price}',
                     style: TextStyle(
@@ -71,8 +77,8 @@ class ProductDetailsScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: _isPortrait ? 20 : 60, vertical: 20),
                   child: SizedBox(
                     width: double.infinity,
                     child: Text(

@@ -95,27 +95,27 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
       ),
       body: RefreshIndicator(
         onRefresh: getProducts,
-        child: SafeArea(
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Theme.of(context).colorScheme.primary,
-                  Colors.limeAccent,
-                  Colors.white,
-                ],
-              ),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Theme.of(context).colorScheme.primary,
+                Colors.limeAccent,
+                Colors.white,
+              ],
             ),
-            child: _isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : ProductsGrid(
+          ),
+          child: _isLoading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SafeArea(
+                  child: ProductsGrid(
                     isShowFavorites: _isShowFavorites,
                   ),
-          ),
+                ),
         ),
       ),
     );

@@ -33,28 +33,30 @@ class _OrdersScreenState extends State<OrdersScreen> {
       appBar: AppBar(
         title: const Text('orders'),
       ),
-      body: FutureBuilder(
-          future: _ordersFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.error != null) {
-              return Center(child: Text(snapshot.error.toString()));
-            }
-            return Consumer<Order>(
-              builder: (context, item, child) {
-                return ListView.builder(
-                  itemCount: item.count,
-                  itemBuilder: (context, index) {
-                    return OrderListItem(
-                      order: item.orders[index],
-                    );
-                  },
-                );
-              },
-            );
-          }),
+      body: SafeArea(
+        child: FutureBuilder(
+            future: _ordersFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.error != null) {
+                return Center(child: Text(snapshot.error.toString()));
+              }
+              return Consumer<Order>(
+                builder: (context, item, child) {
+                  return ListView.builder(
+                    itemCount: item.count,
+                    itemBuilder: (context, index) {
+                      return OrderListItem(
+                        order: item.orders[index],
+                      );
+                    },
+                  );
+                },
+              );
+            }),
+      ),
     );
   }
 }

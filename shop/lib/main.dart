@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:shop/providers/auth_provider.dart';
 
+import './misc/CustomRoute.dart';
 import './providers/cart.dart';
 import './providers/order.dart';
 import './providers/products_provider.dart';
@@ -45,12 +46,15 @@ class MyApp extends StatelessWidget {
         builder: (context, auth, _) {
           debugPrint('auth.isAuth: ${auth.isAuth}'.toUpperCase());
           return MaterialApp(
-            title: 'Flutter Demo',
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
                 colorScheme: ColorScheme.fromSwatch().copyWith(
                     secondary: Colors.pinkAccent, primary: Colors.blueGrey),
-                fontFamily: 'Lato'),
+                fontFamily: 'Lato',
+                pageTransitionsTheme: PageTransitionsTheme(builders: {
+                  TargetPlatform.android: CustomPageTransitionsBuilder(),
+                  TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                })),
             home: auth.isAuth
                 ? const ProductsOverviewScreen()
                 : FutureBuilder(
