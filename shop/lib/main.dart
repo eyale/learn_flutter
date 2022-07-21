@@ -12,8 +12,8 @@ import './screens/cart.dart';
 import './screens/edit_products.dart';
 import './screens/orders.dart';
 import './screens/product_details.dart';
-import './screens/products_overview.dart';
 import './screens/user_products.dart';
+import './widgets/bottom_bar.dart';
 import './widgets/splash_screen.dart';
 
 Future main() async {
@@ -53,10 +53,10 @@ class MyApp extends StatelessWidget {
                 fontFamily: 'Lato',
                 pageTransitionsTheme: PageTransitionsTheme(builders: {
                   TargetPlatform.android: CustomPageTransitionsBuilder(),
-                  TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                  TargetPlatform.iOS: const CupertinoPageTransitionsBuilder(),
                 })),
             home: auth.isAuth
-                ? const ProductsOverviewScreen()
+                ? const BottomBar()
                 : FutureBuilder(
                     future: auth.autoLogin(),
                     builder: (ctx, authResultSnapshot) {
@@ -68,6 +68,7 @@ class MyApp extends StatelessWidget {
                     },
                   ),
             routes: {
+              BottomBar.routeName: (_) => const BottomBar(),
               AuthScreen.routeName: (_) => const AuthScreen(),
               ProductDetailsScreen.routeName: (_) =>
                   const ProductDetailsScreen(),

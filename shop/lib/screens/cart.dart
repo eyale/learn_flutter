@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../providers/cart.dart';
 import '../providers/order.dart';
-import '../widgets/app_drawer.dart';
 import '../widgets/cart_list_item.dart';
 
 class CartScreen extends StatelessWidget {
@@ -18,7 +17,6 @@ class CartScreen extends StatelessWidget {
     final order = Provider.of<Order>(context, listen: false);
 
     return Scaffold(
-      drawer: const AppDrawer(),
       appBar: AppBar(
         title: const Text('Cart'),
       ),

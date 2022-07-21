@@ -21,6 +21,48 @@ class UserProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productsProvider = Provider.of<Products>(context);
+
+    Future _removeProduct() async {
+      try {
+        final resp = await productsProvider.delete(byId: id);
+        Navigator.of(context).pop();
+      } catch (e) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(
+            e.toString(),
+            style: const TextStyle(fontSize: 16),
+          ),
+        ));
+        rethrow;
+      }
+    }
+
+    Future _handleRemoveProductTap() async {
+      return showDialog(
+        context: context,
+        builder: (_) {
+          return CupertinoAlertDialog(
+            title: const Text('Warning'),
+            content: const Text('Confirm product deletion'),
+            actions: [
+              CupertinoDialogAction(
+                onPressed: _removeProduct,
+                isDestructiveAction: true,
+                child: const Text('Remove'),
+              ),
+              CupertinoDialogAction(
+                child: const Text('No'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          );
+        },
+      );
+
+      // _removeProduct();
+    }
+
     return Column(
       children: [
         ListTile(
@@ -34,20 +76,7 @@ class UserProductItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    onPressed: () async {
-                      try {
-                        final resp = await productsProvider.delete(byId: id);
-                      } catch (e) {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                            e.toString(),
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ));
-                        rethrow;
-                      }
-                    },
+                    onPressed: _handleRemoveProductTap,
                     icon: Icon(
                       CupertinoIcons.delete,
                       color: Theme.of(context).colorScheme.error,

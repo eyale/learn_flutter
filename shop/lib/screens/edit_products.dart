@@ -61,15 +61,14 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
   }
 
   void _onSave() async {
-    setState(() {
-      _isLoading = !_isLoading;
-    });
-
     final productsProvider = Provider.of<Products>(context, listen: false);
     final isValid = _formKey.currentState!.validate();
 
     if (!isValid) return;
 
+    setState(() {
+      _isLoading = !_isLoading;
+    });
     final isInProductsAlready = productsProvider.items
         .where((element) => element.id == _editedProduct.id);
 
@@ -145,7 +144,6 @@ class _EditProductsScreenState extends State<EditProductsScreen> {
                               decoration:
                                   const InputDecoration(label: Text('Title:')),
                               textInputAction: TextInputAction.next,
-                              autofocus: true,
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return 'Please provide a title';

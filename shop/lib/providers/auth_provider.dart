@@ -94,6 +94,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<bool> autoLogin() async {
+    // ignore: no_leading_underscores_for_local_identifiers
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
 
@@ -136,6 +137,7 @@ class Auth with ChangeNotifier {
       'expiryDate': expDate.toIso8601String(),
     });
 
+    // ignore: no_leading_underscores_for_local_identifiers
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
 
@@ -161,6 +163,7 @@ class Auth with ChangeNotifier {
     _userId = null;
     Api.instance.userId = null;
 
+    // ignore: no_leading_underscores_for_local_identifiers
     final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
     final SharedPreferences prefs = await _prefs;
 

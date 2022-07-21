@@ -17,7 +17,7 @@ class OrderListItem extends StatefulWidget {
 class _OrderListItemState extends State<OrderListItem>
     with SingleTickerProviderStateMixin {
   bool _isExpanded = false;
-  final _animationDuration = const Duration(milliseconds: 250);
+  final _animationDuration = const Duration(milliseconds: 200);
 
   void handleTapExpand() {
     setState(() {
@@ -30,7 +30,7 @@ class _OrderListItemState extends State<OrderListItem>
     return AnimatedContainer(
       duration: _animationDuration,
       height:
-          _isExpanded ? min(widget.order.products.length * 20 + 110, 200) : 90,
+          _isExpanded ? min(widget.order.products.length * 30 + 100, 200) : 90,
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         child: Column(
@@ -53,11 +53,10 @@ class _OrderListItemState extends State<OrderListItem>
             ),
             // if (_isExpanded)
             AnimatedContainer(
-              curve: Curves.easeOut,
+              curve: Curves.linear,
               duration: _animationDuration,
-              height: _isExpanded
-                  ? min(widget.order.products.length * 20 + 10, 100)
-                  : 0,
+              height:
+                  _isExpanded ? min(widget.order.products.length * 40, 100) : 0,
               child: ListView(
                   children: widget.order.products.map((item) {
                 return Column(
