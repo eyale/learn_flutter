@@ -49,7 +49,9 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: ThemeData(
                 colorScheme: ColorScheme.fromSwatch().copyWith(
-                    secondary: Colors.pinkAccent, primary: Colors.blueGrey),
+                  secondary: Colors.pinkAccent,
+                  primary: Colors.blueGrey,
+                ),
                 fontFamily: 'Lato',
                 pageTransitionsTheme: PageTransitionsTheme(builders: {
                   TargetPlatform.android: CustomPageTransitionsBuilder(),
