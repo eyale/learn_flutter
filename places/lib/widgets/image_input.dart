@@ -1,9 +1,16 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart' as syspath;
 
 class ImageInput extends StatefulWidget {
-  const ImageInput({Key? key}) : super(key: key);
+  Function handleSelectImage;
+
+  ImageInput({
+    Key? key,
+    required this.handleSelectImage,
+  }) : super(key: key);
 
   @override
   State<ImageInput> createState() => _ImageInputState();
@@ -13,13 +20,25 @@ class _ImageInputState extends State<ImageInput> {
   final ImagePicker picker = ImagePicker();
   File? storedImage;
 
+  void _selectImage({required String filePath}) async {
+    final appDir = await syspath.getApplicationDocumentsDirectory();
+    final fileName = path.basename(filePath);
+    final savedImage = await storedImage?.copy('${appDir.path}/$fileName');
+
+    widget.handleSelectImage(savedImage);
+  }
+
   Future _handleTapTakePhoto() async {
     final imageFile = await picker.pickImage(
         source: ImageSource.camera, maxHeight: 600, maxWidth: 600);
-    debugPrint('📁 imageFile: ${imageFile!.path}');
-    setState(() {
-      storedImage = File(imageFile.path);
-    });
+
+    if (imageFile != null) {
+      setState(() {
+        storedImage = File(imageFile.path);
+      });
+
+      _selectImage(filePath: imageFile.path);
+    }
   }
 
   @override

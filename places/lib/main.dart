@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
             }),
             colorScheme: ColorScheme.fromSwatch().copyWith(
               primary: Colors.black,
-              secondary: Colors.pink,
+              secondary: Colors.teal.shade100,
             ),
             fontFamily: ''),
         home: const PlacesListScreen(),
