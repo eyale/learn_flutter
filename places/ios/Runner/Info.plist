@@ -28,6 +28,13 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>In order to get your coordinates we need to get access to your location.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>In order to get your coordinates we need to get access to your location.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>In order to get your coordinates we need to get access to your location.</string>
 	
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>In order to upload image from your gallery we need to access it</string>
