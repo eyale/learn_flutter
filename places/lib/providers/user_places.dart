@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../models/user_place.dart';
-import '../misc/db.dart';
+import '../misc/db_helper.dart';
 
 class UserPlaces with ChangeNotifier {
   List<PlaceModel> _items = [];
@@ -33,11 +33,11 @@ class UserPlaces with ChangeNotifier {
       'image': itemToAdd.image.path,
     };
 
-    DB.insert(tableName: DBTables.userPlaces.name, data: dbData);
+    DBHelper.insert(tableName: DBTables.userPlaces.name, data: dbData);
   }
 
   Future<void> getAndSetUserPlaces() async {
-    final dbData = await DB.getData(
+    final dbData = await DBHelper.getData(
       tableName: DBTables.userPlaces.name,
     );
 

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:places/misc/location_helper.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({Key? key}) : super(key: key);
@@ -9,6 +12,72 @@ class LocationInput extends StatefulWidget {
 
 class _LocationInputState extends State<LocationInput> {
   String? _previewImageUrl;
+  Location location = Location();
+
+  void _showErrorDialog({
+    String errorText = 'Could you please pick an image and name it.',
+    Function? action,
+  }) {
+    showCupertinoDialog(
+        context: context,
+        builder: (bctx) {
+          return CupertinoAlertDialog(
+            title: const Text('Warning'),
+            content: Text(errorText),
+            actions: [
+              CupertinoDialogAction(
+                child: const Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                  if (action != null) action();
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  void _getCurrentLocation() async {
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+    LocationData locationData;
+
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        return;
+      }
+    }
+
+    permissionGranted = await location.hasPermission();
+    debugPrint('permissionGranted: $permissionGranted');
+    if (permissionGranted != PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      debugPrint('2permissionGranted: $permissionGranted');
+      if (permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+    // else {
+    //   _showErrorDialog(
+    //     errorText:
+    //         'You have denied location requests. In order to enable it go to the app Settings',
+    //     action: AppSettings.openAppSettings,
+    //   );
+    // }
+
+    locationData = await location.getLocation();
+
+    final locationPreviewUrl = LocationHelper.getLocationPreviewUrl(
+      latitude: locationData.latitude!,
+      longitude: locationData.longitude!,
+    );
+
+    setState(() {
+      _previewImageUrl = locationPreviewUrl;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +108,7 @@ class _LocationInputState extends State<LocationInput> {
           children: [
             ElevatedButton.icon(
               icon: const Icon(Icons.location_on),
-              onPressed: () {},
+              onPressed: _getCurrentLocation,
               label: Text(
                 'Current location',
                 style: TextStyle(color: Theme.of(context).colorScheme.primary),

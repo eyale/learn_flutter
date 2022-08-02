@@ -6,7 +6,7 @@ enum DBTables {
   userPlaces,
 }
 
-class DB {
+class DBHelper {
   static Future<sql.Database> getDatabase() async {
     final dbPath = await sql.getDatabasesPath();
     // await sql.deleteDatabase(path.join(dbPath, 'places.db'));
