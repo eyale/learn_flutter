@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:places/misc/location_helper.dart';
+
+import '../misc/location_helper.dart';
+import '../screens/map.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({Key? key}) : super(key: key);
@@ -37,6 +40,18 @@ class _LocationInputState extends State<LocationInput> {
         });
   }
 
+  void _generateLocationPreview(
+      {required double latitude, required double longitude}) {
+    final locationPreviewUrl = LocationHelper.getLocationPreviewUrl(
+      latitude: latitude,
+      longitude: longitude,
+    );
+
+    setState(() {
+      _previewImageUrl = locationPreviewUrl;
+    });
+  }
+
   void _getCurrentLocation() async {
     bool serviceEnabled;
     PermissionStatus permissionGranted;
@@ -69,14 +84,28 @@ class _LocationInputState extends State<LocationInput> {
 
     locationData = await location.getLocation();
 
-    final locationPreviewUrl = LocationHelper.getLocationPreviewUrl(
+    _generateLocationPreview(
       latitude: locationData.latitude!,
       longitude: locationData.longitude!,
     );
+  }
 
-    setState(() {
-      _previewImageUrl = locationPreviewUrl;
-    });
+  Future<void> _handleTapSelectOnMap() async {
+    LatLng selectedLocation = await Navigator.of(context).push(
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (ctx) => const MapScreen(
+          isSelecting: true,
+        ),
+      ),
+    );
+
+    if (selectedLocation == null) return;
+
+    _generateLocationPreview(
+      latitude: selectedLocation.latitude,
+      longitude: selectedLocation.longitude,
+    );
   }
 
   @override
@@ -118,7 +147,7 @@ class _LocationInputState extends State<LocationInput> {
             ),
             ElevatedButton.icon(
               icon: const Icon(Icons.map),
-              onPressed: () {},
+              onPressed: _handleTapSelectOnMap,
               label: Text(
                 'Select on map',
                 style: TextStyle(color: Theme.of(context).colorScheme.primary),
