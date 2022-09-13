@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import './add_place.dart';
 import '../providers/user_places.dart';
+import './place_details.dart';
 
 class PlacesListScreen extends StatelessWidget {
   static const String routeName = '/places-list';
@@ -74,6 +75,9 @@ class PlacesListScreen extends StatelessWidget {
                       itemBuilder: (ctx, i) {
                         void _handleTapListItem() {
                           //navigate to DetailsScreen;
+                          Navigator.of(context).pushNamed(
+                              PlaceDetails.routeName,
+                              arguments: userPlacesProviderData.items[i].id);
                         }
 
                         return Padding(

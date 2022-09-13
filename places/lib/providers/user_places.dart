@@ -17,6 +17,10 @@ class UserPlaces with ChangeNotifier {
     return _items.length;
   }
 
+  PlaceModel getItemById(String id) {
+    return _items.firstWhere((element) => element.id == id);
+  }
+
   Future<void> addItem({
     required String name,
     required File file,
