@@ -7,7 +7,11 @@ import '../misc/location_helper.dart';
 import '../screens/map.dart';
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({Key? key}) : super(key: key);
+  final Function onSelectPlace;
+  const LocationInput({
+    Key? key,
+    required this.onSelectPlace,
+  }) : super(key: key);
 
   @override
   State<LocationInput> createState() => _LocationInputState();
@@ -40,8 +44,10 @@ class _LocationInputState extends State<LocationInput> {
         });
   }
 
-  void _generateLocationPreview(
-      {required double latitude, required double longitude}) {
+  void _generateLocationPreview({
+    required double latitude,
+    required double longitude,
+  }) {
     final locationPreviewUrl = LocationHelper.getLocationPreviewUrl(
       latitude: latitude,
       longitude: longitude,
@@ -66,10 +72,7 @@ class _LocationInputState extends State<LocationInput> {
     }
 
     permissionGranted = await location.hasPermission();
-    debugPrint('permissionGranted: $permissionGranted');
     if (permissionGranted != PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      debugPrint('2permissionGranted: $permissionGranted');
       if (permissionGranted != PermissionStatus.granted) {
         return;
       }
@@ -83,6 +86,8 @@ class _LocationInputState extends State<LocationInput> {
     // }
 
     locationData = await location.getLocation();
+
+    widget.onSelectPlace(locationData.latitude, locationData.longitude);
 
     _generateLocationPreview(
       latitude: locationData.latitude!,
@@ -101,6 +106,8 @@ class _LocationInputState extends State<LocationInput> {
     );
 
     if (selectedLocation == null) return;
+
+    widget.onSelectPlace(selectedLocation.latitude, selectedLocation.longitude);
 
     _generateLocationPreview(
       latitude: selectedLocation.latitude,

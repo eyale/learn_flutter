@@ -86,6 +86,8 @@ class PlacesListScreen extends StatelessWidget {
                               ),
                             ),
                             title: Text(userPlacesProviderData.items[i].title),
+                            subtitle: Text(userPlacesProviderData
+                                .items[i].location.address),
                             onTap: _handleTapListItem,
                           ),
                         );

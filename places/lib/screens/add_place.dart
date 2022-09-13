@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import '../providers/user_places.dart';
 import '../widgets/image_input.dart';
 import '../widgets/location_input.dart';
+import '../models/user_place.dart';
+import '../misc/location_helper.dart';
 
 class AddPlaceScreen extends StatefulWidget {
   static const String routeName = '/add-place';
@@ -19,11 +21,23 @@ class AddPlaceScreen extends StatefulWidget {
 
 class _AddPlaceScreenState extends State<AddPlaceScreen> {
   final _titleController = TextEditingController();
+  PlaceLocation? _selectedLocation;
 
   File? _selectedImage;
 
   void _selectImage(File imageFile) {
     _selectedImage = imageFile;
+  }
+
+  void _selectPlace(double lat, double lng) async {
+    final address = await LocationHelper.getPlaceAddress(lat: lat, lng: lng);
+    debugPrint('address: $address');
+
+    _selectedLocation = PlaceLocation(
+      latitude: lat,
+      longitude: lng,
+      address: address,
+    );
   }
 
   void _showErrorDialog({
@@ -46,13 +60,16 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
   }
 
   void _savePlace() {
-    if (_titleController.text.isEmpty || _selectedImage == null) {
+    if (_titleController.text.isEmpty ||
+        _selectedImage == null ||
+        _selectedLocation == null) {
       _showErrorDialog();
       return;
     }
     Provider.of<UserPlaces>(context, listen: false).addItem(
       name: _titleController.text,
       file: _selectedImage!,
+      selectedLocation: _selectedLocation!,
     );
 
     Navigator.of(context).pop();
@@ -83,7 +100,7 @@ class _AddPlaceScreenState extends State<AddPlaceScreen> {
                     ),
                     const SizedBox(height: 20),
                     ImageInput(handleSelectImage: _selectImage),
-                    const LocationInput(),
+                    LocationInput(onSelectPlace: _selectPlace),
                   ],
                 ),
               )),

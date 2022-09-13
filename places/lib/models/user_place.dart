@@ -16,12 +16,12 @@ class PlaceModel {
   final String id;
   final String title;
   final File image;
-  final PlaceLocation? location;
+  final PlaceLocation location;
 
   PlaceModel({
     required this.id,
     required this.title,
     required this.image,
-    this.location,
+    required this.location,
   });
 }
